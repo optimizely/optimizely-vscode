@@ -17,7 +17,6 @@ const OP_MODE_JS: vscode.DocumentFilter = {
 	scheme: 'file',
 };
 
-
 export function register(ctx: vscode.ExtensionContext, optimizelyService: OptimizelyService) {
 	ctx.subscriptions.push(
 		vscode.commands.registerCommand('extension.configureOptimizely', async () => {
@@ -263,3 +262,23 @@ const openExperimentInBrowser = async (flagKey: string, optimizelyService: Optim
 
 	return vscode.env.openExternal(vscode.Uri.parse(optimizelyService.getExperimentPath(flag)));
 };
+
+export function getFeatureRegEx(reg:string): RegExp {
+	if (reg == 'getFeatureVariable') {
+		return REGEX
+	}
+	if (reg == 'getFeatureVariableString') {
+		return REGEX_S
+	}
+	if (reg == 'getFeatureVariableBoolean') {
+		return REGEX_B
+	}
+	if (reg == 'getFeatureVariableInteger') {
+		return REGEX_I
+	}
+	if (reg == 'getFeatureVariableDouble') {
+		return REGEX_D
+	}
+
+	return REGEX
+}

@@ -88,8 +88,7 @@ suite('provider utils tests', () => {
 		tests.forEach(t => {
 			const pos = new vscode.Position(t.line, t.char);
 			let linePrefix = document.lineAt(pos).text.substring(0, pos.character);
-			assert(linePrefix.match(providers.getFeatureRegEx(t.name)))
-			//assert.equal(providers.isPrecedingCharStringDelimeter(document, pos), t.expected, t.name);
+			assert.equal(linePrefix.match(providers.getFeatureRegEx(t.name)), t.expected)
 			assert.equal(t.expected, t.expected);
 		});
 	});
