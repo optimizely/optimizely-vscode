@@ -1,0 +1,10 @@
+something.getFeatureVariable('someFlagKey', '
+something.getFeatureVariable("someFlagKey", "
+something.getFeatureVariableString('someFlagKey', '
+something.getFeatureVariableString("someFlagKey", "
+something.getFeatureVariableDouble('someFlagKey', '
+something.getFeatureVariableDouble("someFlagKey", "
+something.getFeatureVariableInteger('someFlagKey', '
+something.getFeatureVariableInteger("someFlagKey", "
+something.getFeatureVariableBoolean('someFlagKey', '
+something.getFeatureVariableBoolean("someFlagKey", "

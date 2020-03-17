@@ -1,0 +1,6 @@
+out
+node_modules
+yarn-error.log
+.vscode-test
+*.vsix
+dist

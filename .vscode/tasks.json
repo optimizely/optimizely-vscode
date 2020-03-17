@@ -1,0 +1,36 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team
+// ${file}: the current opened file
+// ${fileBasename}: the current opened file's basename
+// ${fileDirname}: the current opened file's dirname
+// ${fileExtname}: the current opened file's extension
+// ${cwd}: the current working directory of the spawned process
+
+// A task runner that calls a custom npm script that compiles the extension.
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "yarn",
+            "command": "yarn",
+            "type": "shell",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "args": ["run", "compile", "--loglevel", "silent"],
+            "isBackground": true,
+            "problemMatcher": "$tsc-watch"
+        },
+        {
+            "label": "test-compile",
+            "command": "yarn",
+            "type": "shell",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "args": ["test-compile"],
+            "isBackground": true,
+            "problemMatcher": "$tsc-watch"
+        }
+    ]
+}
