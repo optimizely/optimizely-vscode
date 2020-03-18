@@ -3,11 +3,11 @@ import * as vscode from 'vscode';
 import { ConfigurationMenu } from './configurationMenu';
 import { OptimizelyService } from './optimizelyService';
 
-const REGEX = /.*\.getFeatureVariable\([\'\"].*[\',\"], ?[\'\"]/
-const REGEX_D = /.*\.getFeatureVariableDouble\([\'\"].*[\',\"], ?[\'\"]/
-const REGEX_I = /.*\.getFeatureVariableInteger\([\'\"].*[\',\"], ?[\'\"]/
-const REGEX_S = /.*\.getFeatureVariableString\([\'\"].*[\',\"], ?[\'\"]/
-const REGEX_B = /.*\.getFeatureVariableBoolean\([\'\"].*[\',\"], ?[\'\"]/
+const REGEX = /.*\.getFeatureVariable\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
+const REGEX_D = /.*\.getFeatureVariableDouble\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
+const REGEX_I = /.*\.getFeatureVariableInteger\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
+const REGEX_S = /.*\.getFeatureVariableString\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
+const REGEX_B = /.*\.getFeatureVariableBoolean\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const OP_MODE_TS: vscode.DocumentFilter = {
 	language: 'typescript',
 	scheme: 'file',
@@ -118,6 +118,7 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 			return undefined;
 		}
 		let linePrefix = document.lineAt(position).text.substring(0, position.character);
+		console.log(linePrefix)
 		if (linePrefix.endsWith('activate(\'') 
 		|| linePrefix.endsWith('activate(\"')
 		|| linePrefix.endsWith('getVariation(\'')
