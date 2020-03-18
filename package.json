@@ -87,7 +87,7 @@
 		"webpack-cli": "3.3.5"
 	},
 	"dependencies": {
-		"@optimizely/optimizely-sdk": "3.5.0",
+		"@optimizely/js-sdk-datafile-manager": "^0.4.0",
 		"@types/lodash": "4.14.116",
 		"@types/opn": "5.1.0",
 		"eventsource": "^1.0.5",

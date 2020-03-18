@@ -1,12 +1,10 @@
 
-import * as optimizelySDK from '@optimizely/optimizely-sdk';
+const { HttpPollingDatafileManager } = require('@optimizely/js-sdk-datafile-manager')
 import { window } from 'vscode';
 
-optimizelySDK.setLogLevel('error'); 
-
 export class OptimizelyService {
-	private readonly store: { [key: string]: optimizelySDK.Client } = {};
-	private activeInstance: optimizelySDK.Client;
+	private readonly store: { [key: string]: any } = {};
+	private activeInstance: any;
 	private projectId: string;
 
 	constructor() {
@@ -19,22 +17,24 @@ export class OptimizelyService {
 
 	getProjectId(): string {
 		if (this.activeInstance != null) {
-			return this.activeInstance.getOptimizelyConfig().projectId;
+			return this.activeInstance.get().projectId;
 		} 
 	}
 
 	isValid(): boolean {
-		return this.activeInstance != null && this.activeInstance.getOptimizelyConfig() != null;
+		return this.activeInstance != null && this.activeInstance.get() != null;
 	}
 
 	allFeatureVariables(featureKey: string, filterByType: string): string[] {
 		if (this.activeInstance != null) {
+			console.log('getting flag')
 			const flag = this.getFeatureFlag(featureKey);
 			if (flag != null) {
+				console.log('getting variable')
 				var variables = new Array<string>()
-				for (let key in flag.variablesMap) {
-					if (filterByType == 'all' || filterByType == flag.variablesMap[key].type) {
-						variables.push(key)
+				for (let v of flag.variables) {
+					if (filterByType == 'all' || filterByType == v.type) {
+						variables.push(v.key)
 					}
 				}
 				return variables;
@@ -51,52 +51,68 @@ export class OptimizelyService {
 		return this.getExperiments();
 	}
 
-	getFlagPath(flag: optimizelySDK.OptimizelyFeature): string {
+	getFlagPath(flag: any): string {
 		if (this.activeInstance == null) return undefined;
 		let flagid = flag.id;
 		return 'https://app.optimizely.com/v2/projects/' + this.projectId + '/features/' + flagid + '#modal';
 	}
 	
-	getExperimentPath(flag: optimizelySDK.OptimizelyExperiment): string {
+	getExperimentPath(flag: any): string {
 		if (this.activeInstance == null) return undefined;
 		let flagid = flag.id;
 		return 'https://app.optimizely.com/v2/projects/' + this.projectId + '/experiments/' + flagid + '/variations';
 	}
 
-	getExperiment(flagKey: string): { flag: optimizelySDK.OptimizelyExperiment; } | PromiseLike<{ flag: any; }> {
+	getExperiment(flagKey: string): { flag: any } | PromiseLike<{ flag: any; }> {
 		if (this.activeInstance != null) {
-			return { flag: this.activeInstance.getOptimizelyConfig().experimentsMap[flagKey]};
+			let ret =  this.activeInstance.get().experiments.filter(e => e.key == flagKey);
+			if (ret.length > 0) {
+				return ret[0]
+			}
 	   }
    }
 
-	getFeatureFlag(flagKey: string): optimizelySDK.OptimizelyFeature {
+	getFeatureFlag(flagKey: string): any {
 		if (this.activeInstance != null) {
-		 	return this.activeInstance.getOptimizelyConfig().featuresMap[flagKey];
+			console.log('filtering')
+			 let ret:[any] =  this.activeInstance.get().featureFlags.filter(f => f.key == flagKey);
+			 console.log(ret)
+			 if (ret.length > 0) {
+				 console.log(ret[0])
+				 return ret[0]
+			 }
 		}
 	}
 
 	async load(sdkKey:string) {
 		console.log("sdkkey")
-		const optimizely = optimizelySDK.createInstance({
+		console.log(sdkKey)
+		const manager = new HttpPollingDatafileManager({
 			sdkKey: sdkKey,
-			datafileOptions: {
-			  autoUpdate: true,
-			  updateInterval: 60000, // 1 minute in milliseconds
-			},
-		  });
+			autoUpdate: true,
+			updateInterval: 5000,
+		  })
+		  console.log('starting.')
+		  manager.start()
+		  await manager.onReady()
+		  console.log('back from onReady')
 
-		this.store[sdkKey] = optimizely;
-		this.activeInstance = optimizely
-		await optimizely.onReady();
-		console.log("optimizely activated");
+		  manager.on('update', ({ datafile }) => {
+			console.log('New datafile available: ')
+			console.log(datafile)
+		  })
+		
 
-		if (optimizely.getOptimizelyConfig() == null) {
+		if (manager.get() == null || manager.get == {}) {
 			console.log('opt config is null');
 			window.showErrorMessage('SDK Key did not initialize correctly')
 		}
 		else {
 			window.showInformationMessage('Optimizely configured successfully');
-			this.projectId = this.activeInstance.getOptimizelyConfig().projectId
+			this.activeInstance = manager
+			this.store[sdkKey] = manager
+			this.projectId = manager.get().projectId
+			console.log(manager.get())
 			console.log('opt config is not null');
 		}
 	}
@@ -117,19 +133,19 @@ export class OptimizelyService {
 			return [];
 		}
 		else {
-			let conf = this.activeInstance.getOptimizelyConfig();
+			let conf = this.activeInstance.get();
 			if (conf == null) {
 				console.log('now config is null');
 			}
 			console.log("getting features");
-			for (let e in this.activeInstance.getOptimizelyConfig().featuresMap) {
+			for (let e of conf.featureFlags) {
 				console.log(e);
 			}
 
 			var arr:string[] = new Array();
 
-			for (let e in this.activeInstance.getOptimizelyConfig().featuresMap) {
-				arr.push(e);
+			for (let e of conf.featureFlags) {
+				arr.push(e.key);
 			}
 			console.log("arr has length " + String(arr.length));
 			return arr;
@@ -143,19 +159,21 @@ export class OptimizelyService {
 			return [];
 		}
 		else {
-			let conf = this.activeInstance.getOptimizelyConfig();
+			let conf = this.activeInstance.get();
 			if (conf == null) {
 				console.log('now config is null');
 			}
 			console.log("getting experiments");
-			for (let e in this.activeInstance.getOptimizelyConfig().experimentsMap) {
+			console.log(this.activeInstance.get().experiments)
+			for (let e of this.activeInstance.get().experiments) {
 				console.log(e);
+				console.log(e.key)
 			}
 
 			var arr:string[] = new Array();
 
-			for (let e in this.activeInstance.getOptimizelyConfig().experimentsMap) {
-				arr.push(e);
+			for (let e of this.activeInstance.get().experiments) {
+				arr.push(e.key);
 			}
 			console.log("arr has length " + String(arr.length));
 			return arr;

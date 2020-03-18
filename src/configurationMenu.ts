@@ -27,6 +27,7 @@ export class ConfigurationMenu {
 		try {
 			await this.updateService();
 		} catch (err) {
+			console.log(err)
 			this.invalidSdkKey = this.sdkKey;
 			window.showErrorMessage('Invalid sdk key, please try again.');
 		}
