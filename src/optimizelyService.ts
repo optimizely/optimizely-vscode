@@ -63,6 +63,22 @@ export class OptimizelyService {
 		return 'https://app.optimizely.com/v2/projects/' + this.projectId + '/experiments/' + flagid + '/variations';
 	}
 
+	getEvents(): string[] {
+		if (this.activeInstance == null) return []
+		const config = this.activeInstance.get()
+		if (config == null) return []
+
+		return config.events.map(e => e.key)
+	}
+
+	getAttributes() {
+		if (this.activeInstance == null) return []
+		const config = this.activeInstance.get()
+		if (config == null) return []
+
+		return config.attributes.map(a => a.key)
+	}
+
 	getExperiment(flagKey: string): { flag: any } | PromiseLike<{ flag: any; }> {
 		if (this.activeInstance != null) {
 			let ret =  this.activeInstance.get().experiments.filter(e => e.key == flagKey);

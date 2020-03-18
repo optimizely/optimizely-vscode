@@ -22,15 +22,10 @@
 			"type": "object",
 			"title": "optimizely",
 			"properties": {
-				"optimizely.enableAutocomplete": {
-					"type": "boolean",
-					"default": true,
-					"description": "Enable flag key autocompletion"
-				},
 				"optimizely.sdkKey": {
 					"type": "string",
 					"default": "",
-					"description": "Optimizely SDK key. Used to get the datafile' command instead."
+					"description": "Optimizely SDK key. Used to get the datafile."
 				}
 			}
 		},
@@ -38,6 +33,16 @@
 			{
 				"command": "extension.openInOptimizely",
 				"title": "optimizely: Open in optimizely",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "extension.listEvents",
+				"title": "optimizely: Insert from list event keys",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "extension.listAttributes",
+				"title": "optimizely: Pick from list attribute keys",
 				"when": "editorTextFocus"
 			},
 			{
@@ -51,6 +56,16 @@
 					"command": "extension.openInOptimizely",
 					"when": "editorTextFocus",
 					"group": "optimizely"
+				},
+				{
+					"command": "extension.listEvents",
+					"when": "editorTextFocus",
+					"group": "optimizely"
+				},
+				{
+					"command": "extension.listAttributes",
+					"when": "editorTextFocus",
+					"group": "optimizely"
 				}
 			]
 		},
@@ -60,7 +75,21 @@
 				"key": "ctrl+alt+o",
 				"mac": "cmd+alt+o",
 				"when": "editorTextFocus"
+			},
+			{
+				"command": "extension.listEvents",
+				"key": "ctrl+alt+e",
+				"mac": "cmd+alt+e",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "extension.listAttributes",
+				"key": "ctrl+alt+a",
+				"mac": "cmd+alt+a",
+				"when": "editorTextFocus"
 			}
+
+
 		]
 	},
 	"scripts": {
