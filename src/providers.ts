@@ -77,10 +77,7 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 
 			console.log(linePrefix);
 
-			if (linePrefix.endsWith('activate(\'') 
-			|| linePrefix.endsWith('activate(\"')
-			|| linePrefix.endsWith('getVariation(\'')
-			|| linePrefix.endsWith('getVariation(\"')) {
+			if (isExperimentApi(linePrefix)) {
 				method = openExperimentInBrowser;
 			}
 
@@ -95,11 +92,47 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 	);
 	ctx.subscriptions.push(
 		vscode.commands.registerTextEditorCommand('extension.listVariations', async editor => {
-			console.log('inside list variations')
+			console.log('inside list varations in optimizely')
+			let selection = editor.selection;
+			let word = editor.document.getText(selection);
+			if (!word) {
+				vscode.window.showErrorMessage(
+					'[Optimizely] Error retrieving keyword (current cursor position is not a feature flag or experiment).',
+				);
+				return;
+			}
 
 			if (!optimizelyService.isValid()) {
-				vscode.window.showErrorMessage('[Optimizely] is not initialized correctly. Set SDK Key');
+				vscode.window.showErrorMessage('[Optimizely] sdkKey is not set.');
+				return;
 			}
+
+			let linePrefix = editor.document.lineAt(selection.anchor).text.substring(0, selection.anchor.character);
+
+			var method = "experiment";
+
+			console.log(linePrefix);
+
+			if (isFeatureApi(linePrefix)) {
+				method = "flag";
+			}
+
+			var list = []
+			try {
+				if (method == "flag") {
+					list = optimizelyService.allFeatureVariables(word, 'all')
+				}
+				else {
+					list = optimizelyService.allExperimentVariables(word)
+				}
+			} catch (err) {
+				let errMsg = `Encountered an unexpected error opening ${word}`;
+				console.error(err);
+				vscode.window.showErrorMessage(`[Optimizely] ${errMsg}`);
+			}
+			let event = await vscode.window.showQuickPick(list)
+			editor.edit(eb => eb.replace(selection, event))			
+
 		}),
 	);
 	ctx.subscriptions.push(
@@ -157,11 +190,7 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 		}
 		let linePrefix = document.lineAt(position).text.substring(0, position.character);
 		console.log(linePrefix)
-		if (linePrefix.endsWith('activate(\'') 
-		|| linePrefix.endsWith('activate(\"')
-		|| linePrefix.endsWith('getVariation(\'')
-		|| linePrefix.endsWith('getVariation(\"')
-		) {
+		if (isExperimentApi(linePrefix)) {
 			const exp:string[] = this.optimizelyService.allExperiments();
 			console.log(exp);
 			return exp.map(flag => {
@@ -169,19 +198,7 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 				});
 	
 		}
-		if (linePrefix.endsWith('isFeatureEnabled(\'') 
-		|| linePrefix.endsWith('isFeatureEnabled(\"')
-		|| linePrefix.endsWith('getFeatureVariable(\'')
-		|| linePrefix.endsWith('getFeatureVariable(\"')
-		|| linePrefix.endsWith('getFeatureVariableDouble(\'')
-		|| linePrefix.endsWith('getFeatureVariableDouble(\"')
-		|| linePrefix.endsWith('getFeatureVariableInteger(\'')
-		|| linePrefix.endsWith('getFeatureVariableInteger(\"')
-		|| linePrefix.endsWith('getFeatureVariableString(\'')
-		|| linePrefix.endsWith('getFeatureVariableString(\"')
-		|| linePrefix.endsWith('getFeatureVariableBoolean(\'')
-		|| linePrefix.endsWith('getFeatureVariableBoolean(\"')
-		) {
+		if (isFeatureApi(linePrefix)) {
 			const flags:string[] = this.optimizelyService.allFlags();
 			console.log(flags);
 			return flags.map(flag => {
@@ -288,6 +305,29 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 	}
 }
 
+const isExperimentApi = (linePrefix:string): boolean => {
+	return (linePrefix.endsWith('activate(\'') 
+	|| linePrefix.endsWith('activate(\"')
+	|| linePrefix.endsWith('getVariation(\'')
+	|| linePrefix.endsWith('getVariation(\"')
+	)	
+}
+const isFeatureApi = (linePrefix:string): boolean => {
+	return (linePrefix.endsWith('isFeatureEnabled(\'') 
+	|| linePrefix.endsWith('isFeatureEnabled(\"')
+	|| linePrefix.endsWith('getFeatureVariable(\'')
+	|| linePrefix.endsWith('getFeatureVariable(\"')
+	|| linePrefix.endsWith('getFeatureVariableDouble(\'')
+	|| linePrefix.endsWith('getFeatureVariableDouble(\"')
+	|| linePrefix.endsWith('getFeatureVariableInteger(\'')
+	|| linePrefix.endsWith('getFeatureVariableInteger(\"')
+	|| linePrefix.endsWith('getFeatureVariableString(\'')
+	|| linePrefix.endsWith('getFeatureVariableString(\"')
+	|| linePrefix.endsWith('getFeatureVariableBoolean(\'')
+	|| linePrefix.endsWith('getFeatureVariableBoolean(\"')
+	)	
+}
+
 const openFlagInBrowser = async (flagKey: string, optimizelyService: OptimizelyService) => {
 	const flag =  optimizelyService.getFeatureFlag(flagKey);
 
@@ -296,10 +336,10 @@ const openFlagInBrowser = async (flagKey: string, optimizelyService: OptimizelyS
 	}
 };
 
-const openExperimentInBrowser = async (flagKey: string, optimizelyService: OptimizelyService) => {
-	const { flag } = await optimizelyService.getExperiment(flagKey);
+const openExperimentInBrowser = async (key: string, optimizelyService: OptimizelyService) => {
+	const experiment = optimizelyService.getExperiment(key);
 
-	return vscode.env.openExternal(vscode.Uri.parse(optimizelyService.getExperimentPath(flag)));
+	return vscode.env.openExternal(vscode.Uri.parse(optimizelyService.getExperimentPath(experiment)));
 };
 
 export function getFeatureRegEx(reg:string): RegExp {

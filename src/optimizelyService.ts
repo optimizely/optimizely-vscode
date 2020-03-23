@@ -25,6 +25,18 @@ export class OptimizelyService {
 		return this.activeInstance != null && this.activeInstance.get() != null;
 	}
 
+	allExperimentVariables(key: string): string[] {
+		if (this.activeInstance != null) {
+			console.log('getting experiment')
+			const flag = this.getExperiment(key);
+			if (flag != null) {
+				console.log('getting variable')
+				return flag.variations.map(v => v.key)
+			}
+	   }
+
+	}
+
 	allFeatureVariables(featureKey: string, filterByType: string): string[] {
 		if (this.activeInstance != null) {
 			console.log('getting flag')
@@ -79,7 +91,7 @@ export class OptimizelyService {
 		return config.attributes.map(a => a.key)
 	}
 
-	getExperiment(flagKey: string): { flag: any } | PromiseLike<{ flag: any; }> {
+	getExperiment(flagKey: string): any {
 		if (this.activeInstance != null) {
 			let ret =  this.activeInstance.get().experiments.filter(e => e.key == flagKey);
 			if (ret.length > 0) {

@@ -12,12 +12,6 @@ export class ConfigurationMenu {
 		this.service = service;
 	}
 
-	shouldResume() {
-		// Required by multiStepInput
-		// Could show a notification with the option to resume.
-		return new Promise<boolean>(() => {});
-	}
-
 	async inputSdkKey() {
 		this.sdkKey = '';
 		this.sdkKey = await window.showInputBox({ prompt: 'Please enter an SDK Key.' });
