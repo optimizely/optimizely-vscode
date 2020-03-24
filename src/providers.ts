@@ -102,28 +102,18 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 				return;
 			}
 
-			if (!optimizelyService.isValid()) {
-				vscode.window.showErrorMessage('[Optimizely] sdkKey is not set.');
-				return;
-			}
-
-			let linePrefix = editor.document.lineAt(selection.anchor).text.substring(0, selection.anchor.character);
-
-			var method = "experiment";
-
-			console.log(linePrefix);
-
-			if (isFeatureApi(linePrefix)) {
-				method = "flag";
-			}
-
 			var list = []
 			try {
-				if (method == "flag") {
+				if (optimizelyService.getFeatureFlag(word) != null) {
 					list = optimizelyService.allFeatureVariables(word, 'all')
 				}
-				else {
+				else if (optimizelyService.getExperiment(word) != null){
 					list = optimizelyService.allExperimentVariables(word)
+				}
+				else {
+					vscode.window.showErrorMessage(
+						'[Optimizely] Error retrieving keyword (current cursor position is not a feature flag or experiment).',
+					);	
 				}
 			} catch (err) {
 				let errMsg = `Encountered an unexpected error opening ${word}`;
