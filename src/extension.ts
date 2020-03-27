@@ -11,7 +11,7 @@ export function activate(ctx: ExtensionContext) {
 
 	optimizelyService = new OptimizelyService();
 
-	commands.executeCommand('extension.configureOptimizely')
+	//commands.executeCommand('extension.configureOptimizely')
 
 	console.log("registering providers")
 	registerProviders(ctx, optimizelyService);
