@@ -315,6 +315,8 @@ const isExperimentApi = (linePrefix:string): boolean => {
 	|| linePrefix.endsWith('activate(\"')
 	|| linePrefix.endsWith('getVariation(\'')
 	|| linePrefix.endsWith('getVariation(\"')
+	|| linePrefix.endsWith('<OptimizelyExperiment experiment=\"')
+	|| linePrefix.endsWith('<OptimizelyExperiment experiment=\'')
 	)	
 }
 const isFeatureApi = (linePrefix:string): boolean => {
@@ -330,6 +332,8 @@ const isFeatureApi = (linePrefix:string): boolean => {
 	|| linePrefix.endsWith('getFeatureVariableString(\"')
 	|| linePrefix.endsWith('getFeatureVariableBoolean(\'')
 	|| linePrefix.endsWith('getFeatureVariableBoolean(\"')
+	|| linePrefix.endsWith('<OptimizelyFeature feature=\"')
+	|| linePrefix.endsWith('<OptimizelyFeature feature=\'')
 	)	
 }
 

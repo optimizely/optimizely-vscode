@@ -107,11 +107,25 @@ export class OptimizelyService {
 	}
 
 	getExperiment(flagKey: string): any {
+		console.log('getting experiment')
 		if (this.activeInstance != null) {
 			let ret =  this.activeInstance.get().experiments.filter(e => e.key == flagKey);
 			if (ret.length > 0) {
 				return ret[0]
 			}
+			console.log('experiment not found in experiments')
+			var e:any = null;
+			this.activeInstance.get().groups.forEach(g => {
+				let ret = g.experiments.filter(e => e.key == flagKey);
+				if (ret != null && ret.length > 0) {
+					console.log('found experiment in group')
+					e = ret[0]
+				}
+			})
+			if (e != null) {
+				return e
+			}
+			console.log('e is null')
 	   }
    }
 
@@ -218,6 +232,14 @@ export class OptimizelyService {
 			for (let e of this.activeInstance.get().experiments) {
 				arr.push(e.key);
 			}
+
+			for (let g of this.activeInstance.get().groups) {
+				console.log(g.policy)
+				for (let e of g.experiments) {
+					arr.push(e.key);
+				}
+			}
+
 			console.log("arr has length " + String(arr.length));
 			return arr;
 		}
