@@ -130,8 +130,7 @@
 		"webpack-cli": "3.3.5"
 	},
 	"dependencies": {
-		"@optimizely/js-sdk-datafile-manager": "^0.4.0",
-		"vsce": "^1.75.0"
+		"@optimizely/js-sdk-datafile-manager": "^0.4.0"
 	},
 	"resolutions": {
 		"node.extend": "^1.1.7"

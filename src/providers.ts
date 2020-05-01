@@ -90,8 +90,6 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 
 			var method = openFlagInBrowser;
 
-			console.log(linePrefix);
-
 			if (isExperimentApi(linePrefix)) {
 				method = openExperimentInBrowser;
 			}
@@ -107,7 +105,6 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 	);
 	ctx.subscriptions.push(
 		vscode.commands.registerTextEditorCommand('extension.listVariations', async editor => {
-			console.log('inside list varations in optimizely')
 			let selection = editor.selection;
 			let word = editor.document.getText(selection);
 			if (!word) {
@@ -142,7 +139,6 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 	);
 	ctx.subscriptions.push(
 		vscode.commands.registerTextEditorCommand('extension.listEvents', async editor => {
-			console.log('inside list events')
 
 			if (!optimizelyService.isValid()) {
 				vscode.window.showErrorMessage('[Optimizely] is not initialized correctly. Set SDK Key');
@@ -161,7 +157,6 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 	);
 	ctx.subscriptions.push(
 		vscode.commands.registerTextEditorCommand('extension.listAttributes', async editor => {
-			console.log('inside list attributes')
 
 			if (!optimizelyService.isValid()) {
 				vscode.window.showErrorMessage('[Optimizely] is not initialized correctly. Set SDK Key');
@@ -188,16 +183,16 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 	}
 
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
-		console.log("inside completions");
+	
 		if (this.optimizelyService == null) {
 			console.log("optimizelyService is null")
 			return undefined;
 		}
 		let linePrefix = document.lineAt(position).text.substring(0, position.character);
-		console.log(linePrefix)
+	
 		if (isExperimentApi(linePrefix)) {
 			const exp:string[] = this.optimizelyService.allExperiments();
-			console.log(exp);
+			
 			return exp.map(flag => {
 					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
 				});
@@ -205,14 +200,13 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 		}
 		if (isFeatureApi(linePrefix)) {
 			const flags:string[] = this.optimizelyService.allFlags();
-			console.log(flags);
+			
 			return flags.map(flag => {
 					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
 				});
 		}
 
 		if (linePrefix.match(REGEX) != null) {
-			console.log('got a match')
 			var matchString = 'getFeatureVariable(\''
 			var matchDelim = '\''
 			if (linePrefix.lastIndexOf(matchString) < 0) {
@@ -222,16 +216,13 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 			let start = linePrefix.lastIndexOf(matchString) + matchString.length
 			let end = linePrefix.indexOf(matchDelim, start)
 			let featureKey = linePrefix.substring(start, end)
-			console.log(featureKey)
 			const variables:string[] = this.optimizelyService.allFeatureVariables(featureKey, 'all');
-			console.log(variables);
 			return variables.map(flag => {
 					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
 				});
 		}
 
 		if (linePrefix.match(REGEX_D) != null) {
-			console.log('got a match')
 			var matchString = 'getFeatureVariableDouble(\''
 			var matchDelim = '\''
 			if (linePrefix.lastIndexOf(matchString) < 0) {
@@ -241,16 +232,13 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 			let start = linePrefix.lastIndexOf(matchString) + matchString.length
 			let end = linePrefix.indexOf(matchDelim, start)
 			let featureKey = linePrefix.substring(start, end)
-			console.log(featureKey)
 			const variables:string[] = this.optimizelyService.allFeatureVariables(featureKey, 'double');
-			console.log(variables);
 			return variables.map(flag => {
 					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
 				});
 		}
 
 		if (linePrefix.match(REGEX_I) != null) {
-			console.log('got a match')
 			var matchString = 'getFeatureVariableInteger(\''
 			var matchDelim = '\''
 			if (linePrefix.lastIndexOf(matchString) < 0) {
@@ -260,16 +248,13 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 			let start = linePrefix.lastIndexOf(matchString) + matchString.length
 			let end = linePrefix.indexOf(matchDelim, start)
 			let featureKey = linePrefix.substring(start, end)
-			console.log(featureKey)
 			const variables:string[] = this.optimizelyService.allFeatureVariables(featureKey, 'integer');
-			console.log(variables);
 			return variables.map(flag => {
 					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
 				});
 		}
 
 		if (linePrefix.match(REGEX_S) != null) {
-			console.log('got a match')
 			var matchString = 'getFeatureVariableString(\''
 			var matchDelim = '\''
 			if (linePrefix.lastIndexOf(matchString) < 0) {
@@ -279,16 +264,13 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 			let start = linePrefix.lastIndexOf(matchString) + matchString.length
 			let end = linePrefix.indexOf(matchDelim, start)
 			let featureKey = linePrefix.substring(start, end)
-			console.log(featureKey)
 			const variables:string[] = this.optimizelyService.allFeatureVariables(featureKey, 'string');
-			console.log(variables);
 			return variables.map(flag => {
 					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
 				});
 		}
 
 		if (linePrefix.match(REGEX_B) != null) {
-			console.log('got a match')
 			var matchString = 'getFeatureVariableBoolean(\''
 			var matchDelim = '\''
 			if (linePrefix.lastIndexOf(matchString) < 0) {
@@ -298,9 +280,7 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 			let start = linePrefix.lastIndexOf(matchString) + matchString.length
 			let end = linePrefix.indexOf(matchDelim, start)
 			let featureKey = linePrefix.substring(start, end)
-			console.log(featureKey)
 			const variables:string[] = this.optimizelyService.allFeatureVariables(featureKey, 'boolean');
-			console.log(variables);
 			return variables.map(flag => {
 					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
 				});

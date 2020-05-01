@@ -32,8 +32,6 @@ export class ConfigurationMenu {
 		this.sdkKey = '';
 		this.sdkKey = await window.showInputBox({ prompt: 'Please enter an SDK Key.' });
 
-		console.log("sdk key entered : " + this.sdkKey);
-
 		try {
 			await this.updateService();
 		} catch (err) {
@@ -45,7 +43,6 @@ export class ConfigurationMenu {
 
 	async validateSdkKey(token: string, invalidSdkKey: string) {
 		if (token === invalidSdkKey) {
-			console.log('invalid sdk key')
 			return 'Invalid sdk.';
 		}
 	}
@@ -55,7 +52,6 @@ export class ConfigurationMenu {
 	}
 
 	async updateService() {
-		console.log("inside update")
 		await this.service.load(this.sdkKey);
 
 	}

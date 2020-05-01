@@ -42,10 +42,8 @@ export class OptimizelyService {
 
 	allExperimentVariables(key: string): string[] {
 		if (this.activeInstance != null) {
-			console.log('getting experiment')
 			const flag = this.getExperiment(key);
 			if (flag != null) {
-				console.log('getting variable')
 				return flag.variations.map(v => v.key)
 			}
 	   }
@@ -54,10 +52,8 @@ export class OptimizelyService {
 
 	allFeatureVariables(featureKey: string, filterByType: string): string[] {
 		if (this.activeInstance != null) {
-			console.log('getting flag')
 			const flag = this.getFeatureFlag(featureKey);
 			if (flag != null) {
-				console.log('getting variable')
 				var variables = new Array<string>()
 				for (let v of flag.variables) {
 					if (filterByType == 'all' || filterByType == v.type) {
@@ -107,61 +103,49 @@ export class OptimizelyService {
 	}
 
 	getExperiment(flagKey: string): any {
-		console.log('getting experiment')
 		if (this.activeInstance != null) {
 			let ret =  this.activeInstance.get().experiments.filter(e => e.key == flagKey);
 			if (ret.length > 0) {
 				return ret[0]
 			}
-			console.log('experiment not found in experiments')
 			var e:any = null;
 			this.activeInstance.get().groups.forEach(g => {
 				let ret = g.experiments.filter(e => e.key == flagKey);
 				if (ret != null && ret.length > 0) {
-					console.log('found experiment in group')
 					e = ret[0]
 				}
 			})
 			if (e != null) {
 				return e
 			}
-			console.log('e is null')
 	   }
    }
 
 	getFeatureFlag(flagKey: string): any {
 		if (this.activeInstance != null) {
-			console.log('filtering')
 			 let ret:[any] =  this.activeInstance.get().featureFlags.filter(f => f.key == flagKey);
-			 console.log(ret)
 			 if (ret.length > 0) {
-				 console.log(ret[0])
 				 return ret[0]
 			 }
 		}
 	}
 
 	async load(sdkKey:string) {
-		console.log("sdkkey")
-		console.log(sdkKey)
 		const manager = new HttpPollingDatafileManager({
 			sdkKey: sdkKey,
 			autoUpdate: true,
 			updateInterval: 5000,
 		  })
-		  console.log('starting.')
 		  manager.start()
 		  await manager.onReady()
-		  console.log('back from onReady')
 
 		  manager.on('update', ({ datafile }) => {
-			console.log('New datafile available: ')
-			console.log(datafile)
+			//console.log('New datafile available: ')
+			//console.log(datafile)
 		  })
 		
 
 		if (manager.get() == null || manager.get == {}) {
-			console.log('opt config is null');
 			window.showErrorMessage('SDK Key did not initialize correctly')
 		}
 		else {
@@ -169,8 +153,6 @@ export class OptimizelyService {
 			this.activeInstance = manager
 			this.store[sdkKey] = manager
 			this.projectId = manager.get().projectId
-			console.log(manager.get())
-			console.log('opt config is not null');
 		}
 	}
 
@@ -184,19 +166,13 @@ export class OptimizelyService {
 	}
 
 	getFlags(): string[] {
-		console.log("inside get flags");
 		if (this.activeInstance == null) {
-			console.log("activeInstance is null");
 			return [];
 		}
 		else {
 			let conf = this.activeInstance.get();
 			if (conf == null) {
 				console.log('now config is null');
-			}
-			console.log("getting features");
-			for (let e of conf.featureFlags) {
-				console.log(e);
 			}
 
 			var arr:string[] = new Array();
@@ -204,13 +180,11 @@ export class OptimizelyService {
 			for (let e of conf.featureFlags) {
 				arr.push(e.key);
 			}
-			console.log("arr has length " + String(arr.length));
 			return arr;
 		}
 	}
 
 	getExperiments(): string[] {
-		console.log("inside get experiments");
 		if (this.activeInstance == null) {
 			console.log("activeInstance is null");
 			return [];
@@ -219,12 +193,6 @@ export class OptimizelyService {
 			let conf = this.activeInstance.get();
 			if (conf == null) {
 				console.log('now config is null');
-			}
-			console.log("getting experiments");
-			console.log(this.activeInstance.get().experiments)
-			for (let e of this.activeInstance.get().experiments) {
-				console.log(e);
-				console.log(e.key)
 			}
 
 			var arr:string[] = new Array();
@@ -234,13 +202,11 @@ export class OptimizelyService {
 			}
 
 			for (let g of this.activeInstance.get().groups) {
-				console.log(g.policy)
 				for (let e of g.experiments) {
 					arr.push(e.key);
 				}
 			}
 
-			console.log("arr has length " + String(arr.length));
 			return arr;
 		}
 	}
