@@ -11,7 +11,7 @@
 	"categories": [
 		"Other"
 	],
-	"icon": "images/Optimizely_Logo.png",
+	"icon": "https://github.com/optimizely/optimizely-vscode/blob/master/images/Optimizely_Logo.png",
 	"license": "SEE LICENSE IN LICENSE",
 	"activationEvents": [
 		"*"
