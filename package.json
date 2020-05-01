@@ -11,7 +11,7 @@
 	"categories": [
 		"Other"
 	],
-	"icon": "https://github.com/optimizely/optimizely-vscode/blob/master/images/Optimizely_Logo.png",
+	"icon": "images/Optimizely_Logo.png",
 	"license": "SEE LICENSE IN LICENSE",
 	"activationEvents": [
 		"*"
@@ -131,8 +131,6 @@
 	},
 	"dependencies": {
 		"@optimizely/js-sdk-datafile-manager": "^0.4.0",
-		"request": "^2.88.2",
-		"request-promise-native": "1.0.8",
 		"vsce": "^1.75.0"
 	},
 	"resolutions": {
