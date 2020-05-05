@@ -3,7 +3,7 @@
 	"displayName": "Optimizely",
 	"description": "Use Optimizely feature flag, experiment, variation, event, and attribute keys.",
 	"version": "0.0.1",
-	"publisher": "Optimizely",
+	"publisher": "optimizely",
 	"engines": {
 		"vscode": "^1.34.0"
 	},
@@ -12,7 +12,8 @@
 		"Other"
 	],
 	"icon": "images/Optimizely_Logo.png",
-	"license": "SEE LICENSE IN LICENSE",
+	"license": "Apache License 2.0",
+	"homepage": "https://www.optimizely.com",
 	"activationEvents": [
 		"*"
 	],
