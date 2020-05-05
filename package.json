@@ -3,7 +3,7 @@
 	"displayName": "Optimizely",
 	"description": "Use Optimizely feature flag, experiment, variation, event, and attribute keys.",
 	"version": "0.0.1",
-	"publisher": "optimizely",
+	"publisher": "optimizely-fullstack",
 	"engines": {
 		"vscode": "^1.34.0"
 	},
