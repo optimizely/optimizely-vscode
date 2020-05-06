@@ -1,6 +1,6 @@
 # Optimizely VSCode Extension
 
-The Optimizely VSCode extension lets you access feature keys, and experiment keys, along with feature variables via auto-complete. 
+The Optimizely VSCode extension lets you access Feature Keys, Experiment Keys and Feature Variables via auto-complete. 
 
 ## Features
 
