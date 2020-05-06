@@ -19,8 +19,8 @@ We welcome contributions and feedback! All contributors must sign our [Contribut
 
 - **All code must have test coverage.** We use Mocha's chai assertion library and Sinon. Changes in functionality should have accompanying unit tests. Bug fixes should have accompanying regression tests.
   - Tests are located in the test directory.
-  - Create a new test suite like providers.tests.ts (yourmodule.tests.ts) or add to the existing.
-  - Run the test script included in the package (npm run test)
+  - Create a new test suite like `providers.tests.ts` (yourmodule.tests.ts) or add to the existing.
+  - Run the test script included in the package (`npm run test`).
 - Please don't change the `package.json` or `VERSION`. We'll take care of bumping the version when we next release.
 - Lint your code with our `npm run lint` before submitting.
 
