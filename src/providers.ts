@@ -173,6 +173,42 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 			}
 		}),
 	);
+	ctx.subscriptions.push(
+		vscode.commands.registerTextEditorCommand('extension.listFeatures', async editor => {
+
+			if (!optimizelyService.isValid()) {
+				vscode.window.showErrorMessage('[Optimizely] is not initialized correctly. Set SDK Key');
+			}
+			else {
+				const flags = optimizelyService.allFlags()
+				let flg = await vscode.window.showQuickPick(flags)
+				// check if there is no selection
+				if (editor.selection.isEmpty) {
+					// the Position object gives you the line and character where the cursor is
+					const position = editor.selection.active;
+					editor.edit(eb => eb.insert(position, flg))
+				}			
+			}
+		}),
+	);
+	ctx.subscriptions.push(
+		vscode.commands.registerTextEditorCommand('extension.listExperiments', async editor => {
+
+			if (!optimizelyService.isValid()) {
+				vscode.window.showErrorMessage('[Optimizely] is not initialized correctly. Set SDK Key');
+			}
+			else {
+				const experiments = optimizelyService.allExperiments()
+				let experiment = await vscode.window.showQuickPick(experiments)
+				// check if there is no selection
+				if (editor.selection.isEmpty) {
+					// the Position object gives you the line and character where the cursor is
+					const position = editor.selection.active;
+					editor.edit(eb => eb.insert(position, experiment))
+				}			
+			}
+		}),
+	);
 }
 
 class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider {
