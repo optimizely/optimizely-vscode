@@ -20,10 +20,15 @@ import { window } from 'vscode';
 export class OptimizelyService {
 	private readonly store: { [key: string]: any } = {};
 	private activeInstance: any;
+	private activeSdkKey: string;
 	private projectId: string;
 
 	constructor() {
 		console.log("created ")
+	}
+
+	getActiveSdkKey(): string {
+		return this.activeSdkKey
 	}
 
 	setProjectId(projectId: string) {
@@ -151,6 +156,7 @@ export class OptimizelyService {
 		else {
 			window.showInformationMessage('Optimizely configured successfully');
 			this.activeInstance = manager
+			this.activeSdkKey = sdkKey
 			this.store[sdkKey] = manager
 			this.projectId = manager.get().projectId
 		}

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 import { ConfigurationMenu } from './configurationMenu';
 import { OptimizelyService } from './optimizelyService';
@@ -206,6 +207,43 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 					const position = editor.selection.active;
 					editor.edit(eb => eb.insert(position, experiment))
 				}			
+			}
+		}),
+	);
+	ctx.subscriptions.push(
+		vscode.commands.registerCommand('extension.showDebugDialog', async () => {
+
+			if (!optimizelyService.isValid()) {
+				vscode.window.showErrorMessage('[Optimizely] is not initialized correctly. Set SDK Key');
+			}
+			else {
+				const panel = vscode.window.createWebviewPanel(
+					'optimizelyDD',
+					'Optimizely Debug Dialog',
+					vscode.ViewColumn.One,
+					{
+						// Enable scripts in the webview
+						enableScripts: true
+					})
+
+				const onDiskPath = vscode.Uri.file(
+					path.join(ctx.extensionPath, "debugdialog.html")
+				);
+				//const content = panel.webview.asWebviewUri(onDiskPath);	
+				//const path = ctx.asAbsolutePath("debugdialog.html")
+
+				const fp = onDiskPath.toString() + "?sdk_key=" + optimizelyService.getActiveSdkKey()
+				console.log(fp)
+
+				vscode.workspace.openTextDocument(onDiskPath).then((document) => {
+					let text = document.getText();
+					text = text.replace('var href = window.location.href', `var href = '${fp}'`)
+					console.log(text)
+					panel.webview.html = text;
+				  });
+
+				// And set its HTML content
+				//panel.webview.html = getWebviewContent(fp);			
 			}
 		}),
 	);
