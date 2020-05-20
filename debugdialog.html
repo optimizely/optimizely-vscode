@@ -1,0 +1,353 @@
+<html>
+<head>
+    <script src="https://unpkg.com/@optimizely/optimizely-sdk@4.0/dist/optimizely.browser.umd.min.js"></script>
+<script>
+var attributes = []
+var attributeTableCount = 1
+var logs = []
+var optimizelyClientInstance = {}
+
+var href = window.location.href
+//create an anchor tag to use the property called search
+let anchor = document.createElement('a');
+//assigning url to href of anchor tag
+anchor.href = href;
+//search property returns the query string of url
+let queryStrings = anchor.search.substring(1);
+let params = queryStrings.split('&');
+
+for (var i = 0; i < params.length; i++) {
+    var pair = params[i].split('=');
+    if (pair[0] == 'sdk_key') {
+        console.log("got once loaded")
+        // Once loaded.. load other JS or CSS or call objects of version.js
+        optimizelyClientInstance = optimizelySdk.createInstance({
+            sdkKey: pair[1], 
+            eventDispatcher: {
+                dispatchEvent() {
+                    console.debug('Event not dispatched')
+                }
+            },
+        });
+        optimizelyClientInstance.onReady().then(() => {
+        // optimizelyClientInstance is ready to use, with datafile downloaded from the
+        // Optimizely CDN
+        document.getElementById('debugdialog').hidden = false;
+        var experimentsMap = optimizelyClientInstance.getOptimizelyConfig().experimentsMap
+        var experimentKeys = Object.keys(experimentsMap);
+
+        setKeys(experimentKeys)
+        document.getElementById('userid').value = uuidv4()
+
+        var select = document.getElementById('attribute1')
+        attributes = optimizelyClientInstance.projectConfigManager.getConfig().attributes.map(a => {return a.key})
+            attributes.forEach( attr => {
+                select.options[select.options.length] = new Option(attr);
+            })
+        });
+        break
+    }
+    
+}
+
+
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+optimizelySdk.setLogLevel('debug'); 
+var customLogger = function(level, message) {
+  var LOG_LEVEL = optimizelySdk.enums.LOG_LEVEL;
+  switch (level) {
+    case LOG_LEVEL.INFO:
+      // INFO log message
+      console.log(message);
+      break;
+    
+    case LOG_LEVEL.DEBUG:
+      // DEBUG log message
+      console.log(message);
+      break;
+
+    case LOG_LEVEL.WARNING:
+      // WARNING log message
+      console.log(message);
+      break;
+
+    case LOG_LEVEL.ERROR:
+      // ERROR log message
+      console.log(message);
+      break;
+  }
+  logs[logs.length] = message
+}
+
+// Set the custom logger
+optimizelySdk.setLogger({
+  log: customLogger,
+});
+
+function setKeys(arr) {
+  var select = document.getElementById('keys')
+  select.options.length = 0
+  for (index in arr) {
+    select.options[select.options.length] = new Option(arr[index]);
+  }
+}
+
+function setVariables(k) {
+  var select = document.getElementById('variables')
+  select.hidden = false
+  select.options.length = 0
+  var vmap = optimizelyClientInstance.getOptimizelyConfig().featuresMap[k].variablesMap
+  var arr = Object.keys(vmap)
+  arr.forEach(key => {
+    select.options[select.options.length] = new Option(key);
+      
+  })
+}
+
+function changeKey() {
+    var val = document.getElementById('keys').value
+    console.log(val)
+    if (optimizelyClientInstance.getOptimizelyConfig().featuresMap[val] !== undefined) {
+        console.log(val)
+        setVariables(val)
+    }
+}
+
+function changeMethod() {
+    var val = document.getElementById('methods').value
+    console.log(val)
+    if (val == 'activate') {
+        var experimentsMap = optimizelyClientInstance.getOptimizelyConfig().experimentsMap
+        var experimentKeys = Object.keys(experimentsMap);
+        setKeys(experimentKeys)
+        document.getElementById('variables').hidden = true
+    }
+    else {
+        var featureMap = optimizelyClientInstance.getOptimizelyConfig().featuresMap
+        var featureKeys = Object.keys(featureMap);
+        setKeys(featureKeys)
+        if (featureKeys.length > 0) {
+            setVariables(featureKeys[0])
+        }
+    }
+}
+
+function getAttributeValue(val, tp) {
+    switch (tp) {
+        case 'String':
+            return val;
+        case 'Integer':
+            return parseInt(val)
+        case 'Double':
+            return parseFloat(val)
+        case 'Boolean':
+            return (val == 'true')
+    }
+}
+function getAttributes() {
+    var attributes = {}
+    for (var i = 1; i <= attributeTableCount; i++) {
+        var attrib = document.getElementById('attribute' + i).value
+        var val = document.getElementById('attribValue' + i).value
+        var tp = document.getElementById('attribType' + i).value
+        if (attrib == '') continue
+        attributes[attrib] = getAttributeValue(val, tp)
+    }
+    return attributes
+}
+
+function run() {
+    logs = []
+    console.log('run')
+    var logarea = document.getElementById('logsarea')
+    var method = document.getElementById('methods').value
+    var key = document.getElementById('keys').value
+    var variable = document.getElementById('variables').value
+    var userid = document.getElementById('userid').value
+    var response = ''
+    logarea.innerHTML = ''
+
+    var attributes = getAttributes()
+
+    switch (method) {
+        case 'activate':
+            console.log('ran activate')
+            response = optimizelyClientInstance.activate(key, userid, attributes)
+            break;
+        case 'isFeatureEnabled':
+            console.log('ran isFeautureEnabled')
+            response = optimizelyClientInstance.isFeatureEnabled(key, userid, attributes)
+            break;
+        case 'getFeatureVariable':
+            console.log('ran getFeatureVariable')
+            response = optimizelyClientInstance.getFeatureVariable(key, variable, userid, attributes)
+            break;
+        case 'getFeatureVariableString':
+            console.log('ran getFeatureVariableString')
+            response = optimizelyClientInstance.getFeatureVariableString(key, variable, userid, attributes)
+            break;
+        case 'getFeatureVariableInteger':
+            console.log('ran getFeatureVariableInteger')
+            response = optimizelyClientInstance.getFeatureVariableInteger(key, variable, userid, attributes)
+            break;
+        case 'getFeatureVariableBoolean':
+            console.log('ran getFeatureBoolean')
+            response = optimizelyClientInstance.getFeatureVariableBoolean(key, variable, userid, attributes)
+            break;
+        case 'getFeatureVariableDouble':
+            console.log('ran getFeatureVariableDouble')
+            response = optimizelyClientInstance.getFeatureVariableDouble(key, variable, userid, attributes)
+            break;
+    }
+
+    logs.forEach(log => {
+        console.log(log)
+        logarea.innerHTML = logarea.innerHTML + log + '\n'
+    })
+
+    logarea.innerHTML = logarea.innerHTML + '\n' + 'response: ' + response + '\n'
+
+}
+
+function addRow(){
+var table = document.getElementById("attributeTable");
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
+  var sel = document.createElement("select")
+  sel.id = 'attribType' + ++attributeTableCount
+  sel.options[sel.options.length] = new Option('String')
+  sel.options[sel.options.length] = new Option('Integer')
+  sel.options[sel.options.length] = new Option('Double')
+  sel.options[sel.options.length] = new Option('Boolean')
+
+  var attr = document.createElement("select")
+  attr.id = 'attribute' + attributeTableCount
+  console.log(attr.id)
+  attr.options[attr.options.length] = new Option("")
+  console.log(attributes)
+  attributes.forEach(attribute =>{
+      attr.options[attr.options.length] = new Option(attribute)
+  })
+  var val = document.createElement("input")
+  val.type = "text"
+  val.value = "value"
+  val.id = "attribValue" + attributeTableCount
+ 
+  cell1.appendChild(attr);
+  cell2.appendChild(val)
+  cell3.appendChild(sel)
+
+  var delrow = document.createElement("input")
+  delrow.type = "button"
+  delrow.value = "-"
+  delrow.onclick = function() {
+    delRow(attributeTableCount)
+  };
+
+  cell4.appendChild(delrow)
+}
+
+function delRow(row) {
+    if (attributeTableCount > 1 && row != 1) {
+        var table = document.getElementById('attributeTable')
+        table.deleteRow(row)
+        attributeTableCount--
+    }
+}
+
+</script>
+<style>
+    .w3-myfont {
+        font-family:open sans,sans-serif;font-weight:300;
+    }
+    textarea {
+        overflow-y: scroll;
+        height: 300px;
+        resize: none; /* Remove this if you want the user to resize the textarea */
+    }
+</style>
+</head>
+<body>
+    <table>
+        <td>
+            <img width="50" height="50" src="https://github.com/optimizely/optimizely-vscode/raw/master/images/Optimizely_Logo.png"/>
+        </td>
+        <td>
+            <h2 class="w3-myfont">Optimizely Configuration Debug Dialog</h2>        
+        </td>
+    </table>
+<form id='debugdialog' hidden='true'>
+    <table>
+    <tr>
+        <td>
+           <label style='font-family:open sans,sans-serif;'>userId:</label><input id='userid' type="text"/>
+        </td>
+    </tr>
+    <tr>
+    <td>
+        <select id="methods" onchange="changeMethod()">
+            <option>activate</option>
+            <option>isFeatureEnabled</option>
+            <option>getFeatureVariable</option>
+            <option>getFeatureVariableString</option>
+            <option>getFeatureVariableInteger</option>
+            <option>getFeatureVariableDouble</option>
+            <option>getFeatureVariableBoolean</option>
+        </select>    
+        <select id="keys" onchange="changeKey()">
+        </select>    
+        <select id="variables" hidden='true'>
+        </select>    
+    </td>
+    </tr>
+    <tr>
+        <td>
+            <table id="attributeTable" border-style='solid' border-color='gray' style='font-family:open sans,sans-serif;'>
+                <th>Attribute Name</th>
+                <th>Value</th>
+                <th>Type</th>
+                <th><input value="+" type='button' onclick="addRow()"/></th>
+                <tr>
+                    <td>
+                        <select id='attribute1'>
+                            <option value=""></option>
+                        </select>
+                    </td>
+                    <td><input id="attribValue1" type="text" value="value"/></td>
+                    <td>
+                        <select id='attribType1'>
+                            <option value="String">String</option>
+                            <option value="Double">Double</option>
+                            <option value="Integer">Integer</option>
+                            <option value="Boolean">Boolean</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input value="-" type="button" onclick="delRow(1)"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <textarea name="" id="logsarea" cols="80" rows="80"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input style='font-family:open sans,sans-serif;' value="Run" type='button' onclick="run()"/>
+        </td>
+    </tr>
+</table>
+</form>
+</body>
+</html>

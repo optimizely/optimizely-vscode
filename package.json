@@ -57,13 +57,17 @@
 				"when": "editorTextFocus"
 			},
 			{
-				"command": "extension.listFeaturs",
+				"command": "extension.listFeatures",
 				"title": "optimizely: Pick from list feature keys",
 				"when": "editorTextFocus"
 			},
 			{
 				"command": "extension.configureOptimizely",
 				"title": "optimizely: Configure"
+			},
+			{
+				"command": "extension.showDebugDialog",
+				"title": "optimizely: Configuration Debug Dialog"
 			}
 		],
 		"menus": {
