@@ -57,7 +57,7 @@
 				"when": "editorTextFocus"
 			},
 			{
-				"command": "extension.listFeaturs",
+				"command": "extension.listFeatures",
 				"title": "optimizely: Pick from list feature keys",
 				"when": "editorTextFocus"
 			},
