@@ -11,10 +11,11 @@ The Optimizely VSCode extension lets you access Feature Keys, Experiment Keys an
 - List Events - command-option-e
 - List Experiment Keys - command-option-x
 - List Feature Keys - command-option-f
+- Command "optimizely: Configuration Debug Dialog" will bring up a debug dialog within the browser that has your current sdk key.  You can run activate and isFeatureEnabled and getFeatureVariable functions changing the attribute to make sure you have the right configuration for your feature rollout.  If you change sdk keys, you should open a new dialog.
 
 ## Installation and configuration
 
-On installation of the Optimizely extension, VSCode will prompt you to configure the extension, add your SDK Key and you are ready to go. To reconfigure the extension, run the "Optimizely: Configure" command from your command pallete.
+On installation of the Optimizely extension, VSCode will not prompt you to configure the extension. To add your SDK Key and configure the extension, run the "Optimizely: Configure" command from your command pallete.
 
 **Note:** If you use quick suggestions to autocomplete words, Optimizely autocomplete functionality requires the `editor.quickSuggestions.strings` setting to be enabled. Otherwise, you'll need to press `Ctrl+Space` (default binding) to see your flag key suggestions.
 
