@@ -1,8 +1,6 @@
 <html>
 <head>
-    <script src="https://unpkg.com/@optimizely/optimizely-sdk@3.5/dist/optimizely.browser.umd.min.js"></script>
-<!--    <script src="https://cdn.optimizely.com/datafiles/FCnSegiEkRry9rhVMroit4.json/tag.js"></script>
--->
+    <script src="https://unpkg.com/@optimizely/optimizely-sdk@4.0/dist/optimizely.browser.umd.min.js"></script>
 <script>
 var attributes = []
 var attributeTableCount = 1
@@ -21,38 +19,32 @@ let params = queryStrings.split('&');
 for (var i = 0; i < params.length; i++) {
     var pair = params[i].split('=');
     if (pair[0] == 'sdk_key') {
-        var sdk_key = decodeURIComponent(pair[1]);
-        console.log(sdk_key)
-        document.getElementsByTagName('head')
-        var JSLink = "https://cdn.optimizely.com/datafiles/" + sdk_key + ".json/tag.js"
-        var JSElement = document.createElement('script');
-        JSElement.src = JSLink;
-        JSElement.onload = OnceLoaded;
-        document.getElementsByTagName('head')[0].appendChild(JSElement);
+        console.log("got once loaded")
+        // Once loaded.. load other JS or CSS or call objects of version.js
+        optimizelyClientInstance = optimizelySdk.createInstance({
+            sdkKey: pair[1], 
+            eventDispatcher: {
+                dispatchEvent() {
+                    console.debug('Event not dispatched')
+                }
+            },
+        });
+        optimizelyClientInstance.onReady().then(() => {
+        // optimizelyClientInstance is ready to use, with datafile downloaded from the
+        // Optimizely CDN
+        document.getElementById('debugdialog').hidden = false;
+        var experimentsMap = optimizelyClientInstance.getOptimizelyConfig().experimentsMap
+        var experimentKeys = Object.keys(experimentsMap);
 
-        function OnceLoaded() {
-            console.log("got once loaded")
-            // Once loaded.. load other JS or CSS or call objects of version.js
-            optimizelyClientInstance = optimizelySdk.createInstance({
-                datafile: window.optimizelyDatafile, // Provide the sdkKey of your desired environment here
-            });
-            optimizelyClientInstance.onReady().then(() => {
-            // optimizelyClientInstance is ready to use, with datafile downloaded from the
-            // Optimizely CDN
-            document.getElementById('debugdialog').hidden = false;
-            var experimentsMap = optimizelyClientInstance.getOptimizelyConfig().experimentsMap
-            var experimentKeys = Object.keys(experimentsMap);
+        setKeys(experimentKeys)
+        document.getElementById('userid').value = uuidv4()
 
-            setKeys(experimentKeys)
-            document.getElementById('userid').value = uuidv4()
-
-            var select = document.getElementById('attribute1')
-            attributes = optimizelyClientInstance.projectConfigManager.getConfig().attributes.map(a => {return a.key})
+        var select = document.getElementById('attribute1')
+        attributes = optimizelyClientInstance.projectConfigManager.getConfig().attributes.map(a => {return a.key})
             attributes.forEach( attr => {
                 select.options[select.options.length] = new Option(attr);
             })
-            });
-        }
+        });
         break
     }
     
@@ -63,10 +55,6 @@ function uuidv4() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
-}
-
-var customDispatcher = function(eventObj, callback) {
-    console.debug('Event not dispatched')
 }
 
 optimizelySdk.setLogLevel('debug'); 
@@ -99,7 +87,6 @@ var customLogger = function(level, message) {
 // Set the custom logger
 optimizelySdk.setLogger({
   log: customLogger,
-  eventDispatcher: customDispatcher,
 });
 
 function setKeys(arr) {
@@ -294,7 +281,7 @@ function delRow(row) {
             <img width="50" height="50" src="https://github.com/optimizely/optimizely-vscode/raw/master/images/Optimizely_Logo.png"/>
         </td>
         <td>
-            <h2 class="w3-myfont">Optimizely Debug Dialog</h2>        
+            <h2 class="w3-myfont">Optimizely Configuration Debug Dialog</h2>        
         </td>
     </table>
 <form id='debugdialog' hidden='true'>
