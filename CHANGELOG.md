@@ -1,5 +1,9 @@
 # vscode extension for Optimizely
 
+## 0.0.5
+May 21, 2020
+ - Fix debug dialog attribute table.  
+
 ## 0.0.4
 May 20, 2020
  - Fix debug dialog theme.  

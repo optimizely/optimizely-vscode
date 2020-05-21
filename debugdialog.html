@@ -148,14 +148,30 @@ function getAttributeValue(val, tp) {
             return (val == 'true')
     }
 }
+
+function getChildNode(list, occurance, name) {
+    var found = 0
+    for (i in list) {
+        if (list[i].nodeName == name) {
+            found++
+            if (found == occurance) {
+                return list[i]
+            }
+        }
+    }
+}
 function getAttributes() {
     var attributes = {}
-    for (var i = 1; i <= attributeTableCount; i++) {
-        var attrib = document.getElementById('attribute' + i).value
-        var val = document.getElementById('attribValue' + i).value
-        var tp = document.getElementById('attribType' + i).value
-        if (attrib == '') continue
-        attributes[attrib] = getAttributeValue(val, tp)
+    var table = document.getElementById("attributeTable");
+    var first = false
+    for (var i = 1; i < table.rows.length; i++) {
+        var r = table.rows[i]
+        var attrib = getChildNode(r.cells[0].childNodes, 1, 'SELECT').value
+        var val = getChildNode(r.cells[1].childNodes, 1, 'INPUT').value
+        var tp = getChildNode(r.cells[2].childNodes, 1, 'SELECT').value
+        if (attrib != '') {
+            attributes[attrib] = getAttributeValue(val, tp)
+        }
     }
     return attributes
 }
@@ -345,7 +361,7 @@ function delRow(el) {
                         </select>
                     </td>
                     <td>
-                        <input value="-" type="button" onclick="delRow(1)"/>
+                        <p></p>
                     </td>
                 </tr>
             </table>
