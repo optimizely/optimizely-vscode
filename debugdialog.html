@@ -19,7 +19,6 @@ let params = queryStrings.split('&');
 for (var i = 0; i < params.length; i++) {
     var pair = params[i].split('=');
     if (pair[0] == 'sdk_key') {
-        console.log("got once loaded")
         optimizelyClientInstance = optimizelySdk.createInstance({
             sdkKey: pair[1], 
             eventDispatcher: {
@@ -110,16 +109,13 @@ function setVariables(k) {
 
 function changeKey() {
     var val = document.getElementById('keys').value
-    console.log(val)
     if (optimizelyClientInstance.getOptimizelyConfig().featuresMap[val] !== undefined) {
-        console.log(val)
         setVariables(val)
     }
 }
 
 function changeMethod() {
     var val = document.getElementById('methods').value
-    console.log(val)
     if (val == 'activate') {
         var experimentsMap = optimizelyClientInstance.getOptimizelyConfig().experimentsMap
         var experimentKeys = Object.keys(experimentsMap);
@@ -178,7 +174,6 @@ function getAttributes() {
 
 function run() {
     logs = []
-    console.log('run')
     var logarea = document.getElementById('logsarea')
     var method = document.getElementById('methods').value
     var key = document.getElementById('keys').value
@@ -191,37 +186,29 @@ function run() {
 
     switch (method) {
         case 'activate':
-            console.log('ran activate')
             response = optimizelyClientInstance.activate(key, userid, attributes)
             break;
         case 'isFeatureEnabled':
-            console.log('ran isFeautureEnabled')
             response = optimizelyClientInstance.isFeatureEnabled(key, userid, attributes)
             break;
         case 'getFeatureVariable':
-            console.log('ran getFeatureVariable')
             response = optimizelyClientInstance.getFeatureVariable(key, variable, userid, attributes)
             break;
         case 'getFeatureVariableString':
-            console.log('ran getFeatureVariableString')
             response = optimizelyClientInstance.getFeatureVariableString(key, variable, userid, attributes)
             break;
         case 'getFeatureVariableInteger':
-            console.log('ran getFeatureVariableInteger')
             response = optimizelyClientInstance.getFeatureVariableInteger(key, variable, userid, attributes)
             break;
         case 'getFeatureVariableBoolean':
-            console.log('ran getFeatureBoolean')
             response = optimizelyClientInstance.getFeatureVariableBoolean(key, variable, userid, attributes)
             break;
         case 'getFeatureVariableDouble':
-            console.log('ran getFeatureVariableDouble')
             response = optimizelyClientInstance.getFeatureVariableDouble(key, variable, userid, attributes)
             break;
     }
 
     logs.forEach(log => {
-        console.log(log)
         logarea.innerHTML = logarea.innerHTML + log + '\n'
     })
 
@@ -245,9 +232,7 @@ var table = document.getElementById("attributeTable");
 
   var attr = document.createElement("select")
   attr.id = 'attribute' + attributeTableCount
-  console.log(attr.id)
   attr.options[attr.options.length] = new Option("")
-  console.log(attributes)
   attributes.forEach(attribute =>{
       attr.options[attr.options.length] = new Option(attribute)
   })
@@ -275,7 +260,6 @@ function delRow(el) {
         var table = document.getElementById('attributeTable')
 
         var index = el.rowIndex
-        console.log("index " + index )
         if (index > 0) {
             table.deleteRow(index)
             attributeTableCount--
