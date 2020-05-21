@@ -229,21 +229,14 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 				const onDiskPath = vscode.Uri.file(
 					path.join(ctx.extensionPath, "debugdialog.html")
 				);
-				//const content = panel.webview.asWebviewUri(onDiskPath);	
-				//const path = ctx.asAbsolutePath("debugdialog.html")
 
 				const fp = onDiskPath.toString() + "?sdk_key=" + optimizelyService.getActiveSdkKey()
-				console.log(fp)
 
 				vscode.workspace.openTextDocument(onDiskPath).then((document) => {
 					let text = document.getText();
 					text = text.replace('var href = window.location.href', `var href = '${fp}'`)
-					console.log(text)
 					panel.webview.html = text;
 				  });
-
-				// And set its HTML content
-				//panel.webview.html = getWebviewContent(fp);			
 			}
 		}),
 	);

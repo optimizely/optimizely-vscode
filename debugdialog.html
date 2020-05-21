@@ -20,7 +20,6 @@ for (var i = 0; i < params.length; i++) {
     var pair = params[i].split('=');
     if (pair[0] == 'sdk_key') {
         console.log("got once loaded")
-        // Once loaded.. load other JS or CSS or call objects of version.js
         optimizelyClientInstance = optimizelySdk.createInstance({
             sdkKey: pair[1], 
             eventDispatcher: {
@@ -249,17 +248,22 @@ var table = document.getElementById("attributeTable");
   delrow.type = "button"
   delrow.value = "-"
   delrow.onclick = function() {
-    delRow(attributeTableCount)
+    delRow(row)
   };
 
   cell4.appendChild(delrow)
 }
 
-function delRow(row) {
-    if (attributeTableCount > 1 && row != 1) {
+function delRow(el) {
+    if (attributeTableCount > 1) {
         var table = document.getElementById('attributeTable')
-        table.deleteRow(row)
-        attributeTableCount--
+
+        var index = el.rowIndex
+        console.log("index " + index )
+        if (index > 0) {
+            table.deleteRow(index)
+            attributeTableCount--
+        }
     }
 }
 
@@ -272,6 +276,16 @@ function delRow(row) {
         overflow-y: scroll;
         height: 300px;
         resize: none; /* Remove this if you want the user to resize the textarea */
+        color: var(--vscode-editor-foreground);
+        background-color: var(--vscode-editor-background);
+    }
+    input {
+        color: var(--vscode-editor-foreground);
+        background-color: var(--vscode-editor-background);
+    }
+    select {
+        color: var(--vscode-editor-foreground);
+        background-color: var(--vscode-editor-background);
     }
 </style>
 </head>
@@ -288,7 +302,7 @@ function delRow(row) {
     <table>
     <tr>
         <td>
-           <label style='font-family:open sans,sans-serif;'>userId:</label><input id='userid' type="text"/>
+           <label style='font-family:open sans,sans-serif;'>userId:</label><input id='userid' type="text" style='width:75%'/>
         </td>
     </tr>
     <tr>
@@ -344,7 +358,7 @@ function delRow(row) {
     </tr>
     <tr>
         <td>
-            <input style='font-family:open sans,sans-serif;' value="Run" type='button' onclick="run()"/>
+            <input style='font-family:open sans,sans-serif;' value=" Run " type='button' onclick="run()"/>
         </td>
     </tr>
 </table>
