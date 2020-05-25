@@ -1,5 +1,9 @@
 # vscode extension for Optimizely
 
+## 0.0.6
+May 25, 2020
+ - Update README to mention minimum vscode version.
+
 ## 0.0.5
 May 21, 2020
  - Fix debug dialog attribute table.  
