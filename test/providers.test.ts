@@ -97,6 +97,20 @@ suite('provider utils tests', () => {
 				expected: true,
 				line: 9,
 				char: 1
+			},
+			{
+				name: "getFeatureVariableJSON",
+				testname: "getFeatureVariableJSON-singleQuote",
+				expected: true,
+				line: 10,
+				char: 1
+			},
+			{
+				name: "getFeatureVariableJSON",
+				testname: "getFeatureVariableJSON-doubleQuote",
+				expected: true,
+				line: 11,
+				char: 1
 			}
 		];
 

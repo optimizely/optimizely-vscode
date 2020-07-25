@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script src="https://unpkg.com/@optimizely/optimizely-sdk@4.0/dist/optimizely.browser.umd.min.js"></script>
+    <script src="https://unpkg.com/@optimizely/optimizely-sdk@4.1/dist/optimizely.browser.umd.min.js"></script>
 <script>
 var attributes = []
 var attributeTableCount = 1
@@ -193,6 +193,9 @@ function run() {
             break;
         case 'getFeatureVariable':
             response = optimizelyClientInstance.getFeatureVariable(key, variable, userid, attributes)
+            if (typeof response === 'object') {
+                response = JSON.stringify(response);
+            }
             break;
         case 'getFeatureVariableString':
             response = optimizelyClientInstance.getFeatureVariableString(key, variable, userid, attributes)
@@ -205,6 +208,9 @@ function run() {
             break;
         case 'getFeatureVariableDouble':
             response = optimizelyClientInstance.getFeatureVariableDouble(key, variable, userid, attributes)
+            break;
+        case 'getFeatureVariableJSON':
+            response = JSON.stringify(optimizelyClientInstance.getFeatureVariableJSON(key, variable, userid, attributes))
             break;
     }
 
@@ -315,6 +321,7 @@ function delRow(el) {
             <option>getFeatureVariableInteger</option>
             <option>getFeatureVariableDouble</option>
             <option>getFeatureVariableBoolean</option>
+            <option>getFeatureVariableJSON</option>
         </select>    
         <select id="keys" onchange="changeKey()">
         </select>    
