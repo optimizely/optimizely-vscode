@@ -1,5 +1,8 @@
 # vscode extension for Optimizely
 
+## Unreleased
+ - Add new method `getFeatureVariableJSON` to support JSON feature variables.
+
 ## 0.0.6
 May 25, 2020
  - Update README to mention minimum vscode version.
