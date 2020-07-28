@@ -172,6 +172,11 @@ function getAttributes() {
     return attributes
 }
 
+function getFeatureVariableType(featureKey, variableKey) {
+    var vmap = optimizelyClientInstance.getOptimizelyConfig().featuresMap[featureKey].variablesMap;
+    return vmap[variableKey].type
+}
+
 function run() {
     logs = []
     var logarea = document.getElementById('logsarea')
@@ -193,7 +198,7 @@ function run() {
             break;
         case 'getFeatureVariable':
             response = optimizelyClientInstance.getFeatureVariable(key, variable, userid, attributes)
-            if (typeof response === 'object') {
+            if (getFeatureVariableType(key, variable) === "json") {
                 response = JSON.stringify(response);
             }
             break;
