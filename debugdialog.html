@@ -173,7 +173,11 @@ function getAttributes() {
 }
 
 function getFeatureVariableType(featureKey, variableKey) {
-    var vmap = optimizelyClientInstance.getOptimizelyConfig().featuresMap[featureKey].variablesMap;
+    let feature = optimizelyClientInstance.getOptimizelyConfig().featuresMap[featureKey];
+    if (feature === undefined) {
+        return null;
+    }
+    var vmap = feature.variablesMap
     return vmap[variableKey].type
 }
 
