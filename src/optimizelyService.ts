@@ -32,13 +32,13 @@ export class OptimizelyService {
 	}
 
 	setProjectId(projectId: string) {
-		this.projectId = projectId; 
+		this.projectId = projectId;
 	}
 
 	getProjectId(): string {
 		if (this.activeInstance != null) {
 			return this.activeInstance.get().projectId;
-		} 
+		}
 	}
 
 	isValid(): boolean {
@@ -51,7 +51,7 @@ export class OptimizelyService {
 			if (flag != null) {
 				return flag.variations.map(v => v.key)
 			}
-	   }
+		}
 
 	}
 
@@ -87,7 +87,7 @@ export class OptimizelyService {
 		let flagid = flag.id;
 		return 'https://app.optimizely.com/v2/projects/' + this.projectId + '/features/' + flagid + '#modal';
 	}
-	
+
 	getExperimentPath(flag: any): string {
 		if (this.activeInstance == null) return undefined;
 		let flagid = flag.id;
@@ -112,11 +112,11 @@ export class OptimizelyService {
 
 	getExperiment(flagKey: string): any {
 		if (this.activeInstance != null) {
-			let ret =  this.activeInstance.get().experiments.filter(e => e.key == flagKey);
+			let ret = this.activeInstance.get().experiments.filter(e => e.key == flagKey);
 			if (ret.length > 0) {
 				return ret[0]
 			}
-			var e:any = null;
+			var e: any = null;
 			this.activeInstance.get().groups.forEach(g => {
 				let ret = g.experiments.filter(e => e.key == flagKey);
 				if (ret != null && ret.length > 0) {
@@ -126,32 +126,32 @@ export class OptimizelyService {
 			if (e != null) {
 				return e
 			}
-	   }
-   }
-
-	getFeatureFlag(flagKey: string): any {
-		if (this.activeInstance != null) {
-			 let ret:[any] =  this.activeInstance.get().featureFlags.filter(f => f.key == flagKey);
-			 if (ret.length > 0) {
-				 return ret[0]
-			 }
 		}
 	}
 
-	async load(sdkKey:string) {
+	getFeatureFlag(flagKey: string): any {
+		if (this.activeInstance != null) {
+			let ret: [any] = this.activeInstance.get().featureFlags.filter(f => f.key == flagKey);
+			if (ret.length > 0) {
+				return ret[0]
+			}
+		}
+	}
+
+	async load(sdkKey: string) {
 		const manager = new HttpPollingDatafileManager({
 			sdkKey: sdkKey,
 			autoUpdate: true,
 			updateInterval: 5000,
-		  })
-		  manager.start()
-		  await manager.onReady()
+		})
+		manager.start()
+		await manager.onReady()
 
-		  manager.on('update', ({ datafile }) => {
+		manager.on('update', ({ datafile }) => {
 			//console.log('New datafile available: ')
 			//console.log(datafile)
-		  })
-		
+		})
+
 
 		if (manager.get() == null || manager.get == {}) {
 			window.showErrorMessage('SDK Key did not initialize correctly')
@@ -184,7 +184,7 @@ export class OptimizelyService {
 				console.log('now config is null');
 			}
 
-			var arr:string[] = new Array();
+			var arr: string[] = new Array();
 
 			for (let e of conf.featureFlags) {
 				arr.push(e.key);
@@ -204,7 +204,7 @@ export class OptimizelyService {
 				console.log('now config is null');
 			}
 
-			var arr:string[] = new Array();
+			var arr: string[] = new Array();
 
 			for (let e of this.activeInstance.get().experiments) {
 				arr.push(e.key);
@@ -219,5 +219,4 @@ export class OptimizelyService {
 			return arr;
 		}
 	}
-
 }
