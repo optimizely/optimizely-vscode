@@ -178,7 +178,7 @@ function getFeatureVariableType(featureKey, variableKey) {
         return null;
     }
     var vmap = feature.variablesMap
-    return vmap[variableKey].type
+    return vmap[variableKey]?.type
 }
 
 function run() {
