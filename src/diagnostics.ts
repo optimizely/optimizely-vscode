@@ -49,7 +49,7 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
 		let matchString = match[0];
 		let parsableString = matchString;
 		let commentMatchIndex = matchString.match(COMMENTS_REGEX)?.index;
-		if (commentMatchIndex > 1) {
+		if (commentMatchIndex != -1) {
 			parsableString = matchString.substring(0, commentMatchIndex);
 		}
 		//TODO: Improve featureMatch
