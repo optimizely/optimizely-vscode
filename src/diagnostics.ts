@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { OptimizelyService } from './optimizelyService';
 import { OP_MODE_JS, OP_MODE_TS } from './providers';
 
-const REGEX = /.*\.(getFeatureVariable|getFeatureVariableDouble|getFeatureVariableInteger|getFeatureVariableString|getFeatureVariableBoolean|getFeatureVariableJSON|activate|getAllFeatureVariables|isFeatureEnabled)\([\'\"][a-zA-Z0-9\_\-]+[\',\"]/g;
-
+const REGEX = /.*\.(getFeatureVariable|getFeatureVariableDouble|getFeatureVariableInteger|getFeatureVariableString|getFeatureVariableBoolean|getFeatureVariableJSON|activate|getAllFeatureVariables|isFeatureEnabled)\([\s\n\r]{0,}[\'\"](.*?)[\',\"]+/g;
+const COMMENTS_REGEX = /[//|*|].*/;
 let activeEditor = vscode.window.activeTextEditor;
 let diagnosticCollection: vscode.DiagnosticCollection;
 
@@ -45,9 +45,19 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
 	let match;
 	let diagnostics: vscode.Diagnostic[] = [];
 	while (match = REGEX.exec(text)) {
-		let featureMatch = match[0].match(/'([^']+)'/);
+		let matchString = match[0];
+		let parsableString = matchString;
+		let commentMatchIndex = matchString.match(COMMENTS_REGEX)?.index;
+		if (commentMatchIndex > 1) {
+			parsableString = match[0].substring(0, commentMatchIndex);
+		}
+		//TODO: replace with one combined REGEX
+		let featureMatch = parsableString.match(/'([^']+)'/);
 		if (featureMatch === null) {
-			featureMatch = match[0].match(/"([^"]+)"/);
+			featureMatch = parsableString.match(/"([^"]+)"/);
+		}
+		if (featureMatch === null) {
+			continue;
 		}
 		let featureKey = featureMatch[1];
 		if (featureFlags.indexOf(featureKey) === -1) {
