@@ -2,12 +2,13 @@ import * as vscode from 'vscode';
 import { OptimizelyService } from './optimizelyService';
 import { OP_MODE_JS, OP_MODE_TS } from './providers';
 
-const REGEX = /.*\.(getFeatureVariable|getFeatureVariableDouble|getFeatureVariableInteger|getFeatureVariableString|getFeatureVariableBoolean|getFeatureVariableJSON|activate|getAllFeatureVariables|isFeatureEnabled)\([\s\n\r]{0,}[\'\"](.*?)[\',\"]+/g;
+const REGEX = /.*\.(getFeatureVariable|getFeatureVariableDouble|getFeatureVariableInteger|getFeatureVariableString|getFeatureVariableBoolean|getFeatureVariableJSON|getAllFeatureVariables|isFeatureEnabled)\([\s\n\r]{0,}[\'\"](.*?)[\',\"]+/g;
 const COMMENTS_REGEX = /[//|*|].*/;
 let activeEditor = vscode.window.activeTextEditor;
 let diagnosticCollection: vscode.DiagnosticCollection;
 
 export function activateDiagnostics(ctx: vscode.ExtensionContext, optimizelyService: OptimizelyService): void {
+	//creating instace of DiagnosticCollection that manages a set of diagnostics
 	diagnosticCollection = vscode.languages.createDiagnosticCollection();
 	ctx.subscriptions.push(diagnosticCollection);
 	ctx.subscriptions.push(
@@ -49,9 +50,9 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
 		let parsableString = matchString;
 		let commentMatchIndex = matchString.match(COMMENTS_REGEX)?.index;
 		if (commentMatchIndex > 1) {
-			parsableString = match[0].substring(0, commentMatchIndex);
+			parsableString = matchString.substring(0, commentMatchIndex);
 		}
-		//TODO: replace with one combined REGEX
+		//TODO: Improve featureMatch
 		let featureMatch = parsableString.match(/'([^']+)'/);
 		if (featureMatch === null) {
 			featureMatch = parsableString.match(/"([^"]+)"/);
@@ -62,11 +63,13 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
 		let featureKey = featureMatch[1];
 		if (featureFlags.indexOf(featureKey) === -1) {
 			let startPos = document.positionAt(
-				match.index + match[0].lastIndexOf(featureKey),
+				match.index + parsableString.lastIndexOf(featureKey),
 			);
-			let endPos = document.positionAt(match.index + match[0].length - 1);
+			let endPos = document.positionAt(match.index + parsableString.lastIndexOf(featureKey) + featureKey.length);
 			let range = new vscode.Range(startPos, endPos);
 			diagnostics.push(
+
+				//object representing a compiler warning
 				new vscode.Diagnostic(
 					range,
 					`Feature key ${featureKey} is not in datafile.`,
