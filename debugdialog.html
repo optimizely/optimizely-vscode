@@ -178,7 +178,10 @@ function getFeatureVariableType(featureKey, variableKey) {
         return null;
     }
     var vmap = feature.variablesMap
-    return vmap[variableKey]?.type
+    if (vmap[variableKey] === undefined) {
+        return null;
+    }
+    return vmap[variableKey].type;
 }
 
 function run() {
