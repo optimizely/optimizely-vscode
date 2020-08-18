@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { window } from 'vscode';
+import { window } from 'vscode'
 
-import { OptimizelyService } from './optimizelyService';
+import { OptimizelyService } from './optimizelyService'
 
 export class ConfigurationMenu {
 	private readonly service: OptimizelyService;
@@ -24,42 +24,40 @@ export class ConfigurationMenu {
 	private sdkKey: string;
 	private invalidSdkKey: string;
 
-	constructor(service : OptimizelyService) {
-		this.service = service;
+	constructor (service : OptimizelyService) {
+	  this.service = service
 	}
 
-	async inputSdkKey() {
-		this.sdkKey = '';
-		this.sdkKey = await window.showInputBox({ prompt: 'Please enter an SDK Key.' });
+	async inputSdkKey () {
+	  this.sdkKey = ''
+	  this.sdkKey = await window.showInputBox({ prompt: 'Please enter an SDK Key.' })
 
-		try {
-			await this.updateService();
-		} catch (err) {
-			console.log(err)
-			this.invalidSdkKey = this.sdkKey;
-			window.showErrorMessage('Invalid sdk key, please try again.');
-		}
+	  try {
+	    await this.updateService()
+	  } catch (err) {
+	    console.log(err)
+	    this.invalidSdkKey = this.sdkKey
+	    window.showErrorMessage('Invalid sdk key, please try again.')
+	  }
 	}
 
-	async validateSdkKey(token: string, invalidSdkKey: string) {
-		if (token === invalidSdkKey) {
-			return 'Invalid sdk.';
-		}
+	async validateSdkKey (token: string, invalidSdkKey: string) {
+	  if (token === invalidSdkKey) {
+	    return 'Invalid sdk.'
+	  }
 	}
 
-	didChangeSdkKey(): boolean {
-		return this.sdkKey !== this.currentSdkKey;
+	didChangeSdkKey (): boolean {
+	  return this.sdkKey !== this.currentSdkKey
 	}
 
-	async updateService() {
-		await this.service.load(this.sdkKey);
-
+	async updateService () {
+	  await this.service.load(this.sdkKey)
 	}
 
-	async configure() {
-		console.log('config');
+	async configure () {
+	  console.log('config')
 
-		await this.inputSdkKey();
+	  await this.inputSdkKey()
 	}
-
 }
