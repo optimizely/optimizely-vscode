@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { OptimizelyService } from './optimizelyService';
 import { OP_MODE_JS, OP_MODE_TS } from './providers';
 
-const REGEX = /.*\.(getFeatureVariable|getFeatureVariableDouble|getFeatureVariableInteger|getFeatureVariableString|getFeatureVariableBoolean|getFeatureVariableJSON|getAllFeatureVariables|isFeatureEnabled)\([\s\n\r]{0,}[\'\"](.*?)[\',\"]+/g;
+const REGEX = /.*\.(getFeatureVariable|getFeatureVariableDouble|getFeatureVariableInteger|getFeatureVariableString|getFeatureVariableBoolean|getFeatureVariableJSON|getAllFeatureVariables|isFeatureEnabled)\([\s\n\r]{0,}[//|*|].*{0,}[\'\"](.*?)[\',\"]+/g;
 const COMMENTS_REGEX = /[//|*|].*/;
 let activeEditor = vscode.window.activeTextEditor;
 let diagnosticCollection: vscode.DiagnosticCollection;
@@ -52,7 +52,6 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
 		if (commentMatchIndex != -1) {
 			parsableString = matchString.substring(0, commentMatchIndex);
 		}
-		//TODO: Improve featureMatch
 		let featureMatch = parsableString.match(/'([^']+)'/);
 		if (featureMatch === null) {
 			featureMatch = parsableString.match(/"([^"]+)"/);
@@ -68,7 +67,6 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
 			let endPos = document.positionAt(match.index + parsableString.lastIndexOf(featureKey) + featureKey.length);
 			let range = new vscode.Range(startPos, endPos);
 			diagnostics.push(
-
 				//object representing a compiler warning
 				new vscode.Diagnostic(
 					range,
