@@ -1,0 +1,25 @@
+language: node_js
+branches:
+  only:
+  - master
+  - /^\d+\.\d+\.(\d|[x])
+env:
+  global:
+#    - SDK=javascript
+#    - SDK_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH
+#before_install: cd packages/optimizely-sdk
+install: npm install
+script: npm test
+#after_success: npm run coveralls
+
+# Integration tests need to run first to reset the PR build status to pending
+stages:
+  - 'Lint'
+  - 'Test'
+
+jobs:
+  include:
+    - stage: 'Lint'
+      node_js: '12'
+      script: npm run lint
+      after_success: travis_terminate 0
