@@ -18,6 +18,16 @@ import * as path from 'path';
 
 import { ConfigurationMenu } from './configurationMenu';
 import { OptimizelyService } from './optimizelyService';
+import { activateDiagnostics } from './diagnostics';
+
+export const OP_MODE_TS: vscode.DocumentFilter = {
+	language: 'typescript',
+	scheme: 'file',
+};
+export const OP_MODE_JS: vscode.DocumentFilter = {
+	language: 'javascript',
+	scheme: 'file',
+};
 
 const REGEX = /.*\.getFeatureVariable\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_D = /.*\.getFeatureVariableDouble\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
@@ -25,14 +35,6 @@ const REGEX_I = /.*\.getFeatureVariableInteger\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?
 const REGEX_S = /.*\.getFeatureVariableString\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_B = /.*\.getFeatureVariableBoolean\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_J = /.*\.getFeatureVariableJSON\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
-const OP_MODE_TS: vscode.DocumentFilter = {
-	language: 'typescript',
-	scheme: 'file',
-};
-const OP_MODE_JS: vscode.DocumentFilter = {
-	language: 'javascript',
-	scheme: 'file',
-};
 
 export function register(ctx: vscode.ExtensionContext, optimizelyService: OptimizelyService) {
 	ctx.subscriptions.push(
@@ -241,6 +243,7 @@ export function register(ctx: vscode.ExtensionContext, optimizelyService: Optimi
 			}
 		}),
 	);
+	activateDiagnostics(ctx, optimizelyService);
 }
 
 class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider {
