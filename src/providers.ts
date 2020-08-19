@@ -30,6 +30,7 @@ export const OP_MODE_JS: vscode.DocumentFilter = {
 };
 
 const REGEX = /.*\.getFeatureVariable\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
+const REGEX_A = /.*\.getAllFeatureVariables\([\'\"]$/
 const REGEX_D = /.*\.getFeatureVariableDouble\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_I = /.*\.getFeatureVariableInteger\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_S = /.*\.getFeatureVariableString\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
@@ -401,6 +402,8 @@ const isFeatureApi = (linePrefix:string): boolean => {
 	|| linePrefix.endsWith('getFeatureVariableBoolean(\"')
 	|| linePrefix.endsWith('getFeatureVariableJSON(\'')
 	|| linePrefix.endsWith('getFeatureVariableJSON(\"')
+	|| linePrefix.endsWith('getAllFeatureVariables(\'')
+	|| linePrefix.endsWith('getAllFeatureVariables(\"')
 	|| linePrefix.endsWith('<OptimizelyFeature feature=\"')
 	|| linePrefix.endsWith('<OptimizelyFeature feature=\'')
 	)	
