@@ -55,20 +55,23 @@ export class OptimizelyService {
 
 	}
 
-	allFeatureVariables(featureKey: string, filterByType: string): string[] {
+	allFeatureVariables(featureKey: string, filterByTypeOrSubType: string): string[] {
 		if (this.activeInstance != null) {
 			const flag = this.getFeatureFlag(featureKey);
 			if (flag != null) {
 				var variables = new Array<string>()
 				for (let v of flag.variables) {
-					if (filterByType == 'all' || filterByType == v.type) {
+					let type = v.type
+					if (v.subType) {
+						type = v.subType
+					}
+					if (filterByTypeOrSubType == 'all' || filterByTypeOrSubType == type) {
 						variables.push(v.key)
 					}
 				}
 				return variables;
 			}
-	   }
-
+		}
 	}
 
 	allFlags(): string[] {

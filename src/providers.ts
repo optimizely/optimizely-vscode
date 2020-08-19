@@ -24,6 +24,7 @@ const REGEX_D = /.*\.getFeatureVariableDouble\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[
 const REGEX_I = /.*\.getFeatureVariableInteger\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_S = /.*\.getFeatureVariableString\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_B = /.*\.getFeatureVariableBoolean\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
+const REGEX_J = /.*\.getFeatureVariableJSON\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const OP_MODE_TS: vscode.DocumentFilter = {
 	language: 'typescript',
 	scheme: 'file',
@@ -250,7 +251,7 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 	}
 
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
-	
+
 		if (this.optimizelyService == null) {
 			console.log("optimizelyService is null")
 			return undefined;
@@ -353,6 +354,22 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 				});
 		}
 
+		if (linePrefix.match(REGEX_J) != null) {
+			var matchString = 'getFeatureVariableJSON(\''
+			var matchDelim = '\''
+			if (linePrefix.lastIndexOf(matchString) < 0) {
+				matchString = 'getFeatureVariableJSON(\"'
+				matchDelim = '\"'
+			}
+			let start = linePrefix.lastIndexOf(matchString) + matchString.length
+			let end = linePrefix.indexOf(matchDelim, start)
+			let featureKey = linePrefix.substring(start, end)
+			const variables:string[] = this.optimizelyService.allFeatureVariables(featureKey, 'json');
+			return variables.map(flag => {
+					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
+				});
+		}
+
 		return undefined;
 	}
 }
@@ -379,6 +396,8 @@ const isFeatureApi = (linePrefix:string): boolean => {
 	|| linePrefix.endsWith('getFeatureVariableString(\"')
 	|| linePrefix.endsWith('getFeatureVariableBoolean(\'')
 	|| linePrefix.endsWith('getFeatureVariableBoolean(\"')
+	|| linePrefix.endsWith('getFeatureVariableJSON(\'')
+	|| linePrefix.endsWith('getFeatureVariableJSON(\"')
 	|| linePrefix.endsWith('<OptimizelyFeature feature=\"')
 	|| linePrefix.endsWith('<OptimizelyFeature feature=\'')
 	)	
@@ -413,6 +432,9 @@ export function getFeatureRegEx(reg:string): RegExp {
 	}
 	if (reg == 'getFeatureVariableDouble') {
 		return REGEX_D
+	}
+	if (reg == 'getFeatureVariableJSON') {
+		return REGEX_J
 	}
 
 	return REGEX
