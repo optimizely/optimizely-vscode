@@ -442,6 +442,9 @@ export function getFeatureRegEx(reg:string): RegExp {
 	if (reg == 'getFeatureVariableJSON') {
 		return REGEX_J
 	}
+	if (reg == 'getAllFeatureVariables') {
+		return REGEX_A
+	}
 
 	return REGEX
 }

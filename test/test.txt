@@ -10,3 +10,5 @@ something.getFeatureVariableBoolean('someFlagKey', '
 something.getFeatureVariableBoolean("someFlagKey", "
 something.getFeatureVariableJSON('someFlagKey', '
 something.getFeatureVariableJSON("someFlagKey", "
+something.getAllFeatureVariables('
+something.getAllFeatureVariables("

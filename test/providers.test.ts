@@ -111,6 +111,20 @@ suite('provider utils tests', () => {
 				expected: true,
 				line: 11,
 				char: 1
+			},
+			{
+				name: "getAllFeatureVariables",
+				testname: "getAllFeatureVariables-singleQuote",
+				expected: true,
+				line: 12,
+				char: 1
+			},
+			{
+				name: "getAllFeatureVariables",
+				testname: "getAllFeatureVariables-doubleQuote",
+				expected: true,
+				line: 13,
+				char: 1
 			}
 		];
 
@@ -119,8 +133,7 @@ suite('provider utils tests', () => {
 			const pos = new vscode.Position(t.line, t.char);
 			let linePrefix = document.lineAt(pos).text;
 			let regex = providers.getFeatureRegEx(t.name);
-			assert.equal(linePrefix.match(providers.getFeatureRegEx(t.name)) != null, t.expected)
-			assert.equal(t.expected, t.expected);
+			assert.equal(linePrefix.match(regex) != null, t.expected)
 		});
 	});
 });
