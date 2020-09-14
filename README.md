@@ -1,8 +1,10 @@
 # Optimizely VSCode Extension
 
-The Optimizely VSCode extension lets you access Feature Keys, Experiment Keys and Feature Variables via auto-complete for javascript typescript and react.  If not using these languages, you can use the keyboard shortcuts below to insert your experiment and feature keys as well as attribute and event keys.
+The Optimizely VSCode extension lets you access Feature Keys, Experiment Keys and Feature Variables via auto-complete for javascript, typescript and react. If not using these languages, you can use the keyboard shortcuts below to insert your experiment and feature keys as well as attribute and event keys.
 
-This extension is compatiable with 1.34 and higher of vscode.
+This extension also evaluates the use of Optimizely's public APIs (e.g. getFeatureVariableJSON(feature_key, userId, attributes)) in active .js and .ts files, and highlights Feature Keys that do not exist in datafile.
+
+The Optimizely VSCode extension is compatiable with 1.34 and higher of vscode.
 
 ## Features
 
