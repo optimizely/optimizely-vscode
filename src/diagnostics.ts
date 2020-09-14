@@ -22,14 +22,14 @@ export function activateDiagnostics(ctx: vscode.ExtensionContext, optimizelyServ
   ctx.subscriptions.push(
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       activeEditor = editor;
-      if (editor) {
+      if (editor && (activeEditor.document.languageId === OP_MODE_TS.language || activeEditor.document.languageId === OP_MODE_JS.language)) {
         updateDiagnostics(optimizelyService, activeEditor.document);
       }
     }),
   );
   ctx.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument((event) => {
-      if (activeEditor && event.document === activeEditor.document) {
+      if (activeEditor && event.document === activeEditor.document && (event.document.languageId === OP_MODE_TS.language || event.document.languageId === OP_MODE_JS.language)) {
         updateDiagnostics(optimizelyService, event.document);
       }
     }),
