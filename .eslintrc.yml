@@ -11,4 +11,21 @@ parserOptions:
   ecmaVersion: 11
 plugins:
   - '@typescript-eslint'
-rules: {}
+rules:
+  eqeqeq: warn
+  no-tabs: warn
+  no-useless-escape: warn
+  no-void: warn
+  camelcase: warn
+  no-mixed-spaces-and-tabs: warn
+  no-redeclare: warn
+  no-array-constructor: warn
+  no-mixed-operators: warn
+  no-undef: warn
+  no-unused-vars: warn
+  promise/param-names: warn
+  func-call-spacing: warn
+  new-cap: warn
+  no-unexpected-multiline: warn
+  no-proto: warn
+  no-prototype-builtins: warn
