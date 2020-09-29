@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+'use strict'
 
-import { commands, ExtensionContext } from 'vscode';
+import { commands, ExtensionContext } from 'vscode'
 
-import { OptimizelyService } from './optimizelyService';
-import { register as registerProviders } from './providers';
+import { OptimizelyService } from './optimizelyService'
+import { register as registerProviders } from './providers'
 
-let optimizelyService: OptimizelyService;
+let optimizelyService: OptimizelyService
 
-export function activate(ctx: ExtensionContext) {
+export function activate (ctx: ExtensionContext) {
+  optimizelyService = new OptimizelyService()
 
-	optimizelyService = new OptimizelyService();
+  // commands.executeCommand('extension.configureOptimizely')
 
-	//commands.executeCommand('extension.configureOptimizely')
-
-	console.log("registering providers")
-	registerProviders(ctx, optimizelyService);
+  console.log('registering providers')
+  registerProviders(ctx, optimizelyService)
 }
 
-export function deactivate() {
-	console.log("deactivated extension")
-	optimizelyService.stop();
+export function deactivate () {
+  console.log('deactivated extension')
+  optimizelyService.stop()
 }
