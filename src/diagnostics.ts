@@ -45,7 +45,7 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
   const text = document.getText();
   let match;
   let diagnostics: vscode.Diagnostic[] = [];
-  while (match = REGEX.exec(text)) {
+  while (match === REGEX.exec(text)) {
     let matchString = match[0];
     let parsableString = matchString;
     let commentMatchIndex = matchString.match(COMMENTS_REGEX)?.index;

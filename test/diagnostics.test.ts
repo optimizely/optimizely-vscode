@@ -14,8 +14,7 @@ const flags = ['flag1','flag2','flag3'];
 
 
 suite('diagnostics utils tests', () => {
-  let context: vscode.ExtensionContext;
-  context = ({
+  const context: vscode.ExtensionContext = ({
     subscriptions: {push: sinon.spy()},
   } as unknown) as vscode.ExtensionContext;
   const optimizelyService = new OptimizelyService;
