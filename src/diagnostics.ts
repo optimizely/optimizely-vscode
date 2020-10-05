@@ -45,6 +45,7 @@ export function updateDiagnostics(optimizelyService: OptimizelyService, document
   const text = document.getText();
   let match;
   let diagnostics: vscode.Diagnostic[] = [];
+  // eslint-disable-next-line
   while (match = REGEX.exec(text)) {
     let matchString = match[0];
     let parsableString = matchString;
