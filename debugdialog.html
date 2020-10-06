@@ -111,7 +111,7 @@ function changeKey() {
     var val = document.getElementById('keys').value
     var currentMethod = document.getElementById('methods').value
     if (currentMethod == 'isFeatureEnabled' || currentMethod == 'getAllFeatureVariables') {
-        document.getElementById('variables').hidden = true;
+        document.getElementById('variables').hidden = true
     }
     else {
         if (optimizelyClientInstance.getOptimizelyConfig().featuresMap[val] !== undefined) {
