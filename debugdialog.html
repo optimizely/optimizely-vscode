@@ -209,6 +209,9 @@ function run() {
                 response = JSON.stringify(response);
             }
             break;
+        case 'getAllFeatureVariables':
+            response = JSON.stringify(optimizelyClientInstance.getAllFeatureVariables(key, userid, attributes), null, 2)
+            break;
         case 'getFeatureVariableString':
             response = optimizelyClientInstance.getFeatureVariableString(key, variable, userid, attributes)
             break;
@@ -334,6 +337,7 @@ function delRow(el) {
             <option>getFeatureVariableDouble</option>
             <option>getFeatureVariableBoolean</option>
             <option>getFeatureVariableJSON</option>
+            <option>getAllFeatureVariables</option>
         </select>    
         <select id="keys" onchange="changeKey()">
         </select>    
