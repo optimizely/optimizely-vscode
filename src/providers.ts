@@ -30,7 +30,6 @@ export const OP_MODE_JS: vscode.DocumentFilter = {
 };
 
 const REGEX = /.*\.getFeatureVariable\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
-const REGEX_A = /.*\.getAllFeatureVariables\([\'\"]$/
 const REGEX_D = /.*\.getFeatureVariableDouble\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_I = /.*\.getFeatureVariableInteger\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
 const REGEX_S = /.*\.getFeatureVariableString\([\'\"][a-zA-Z0-9\_\-]+[\',\"], ?[\'\"]$/
@@ -441,9 +440,6 @@ export function getFeatureRegEx(reg:string): RegExp {
 	}
 	if (reg == 'getFeatureVariableJSON') {
 		return REGEX_J
-	}
-	if (reg == 'getAllFeatureVariables') {
-		return REGEX_A
 	}
 
 	return REGEX

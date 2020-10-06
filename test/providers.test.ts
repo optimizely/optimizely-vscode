@@ -111,20 +111,6 @@ suite('provider utils tests', () => {
 				expected: true,
 				line: 11,
 				char: 1
-			},
-			{
-				name: "getAllFeatureVariables",
-				testname: "getAllFeatureVariables-singleQuote",
-				expected: true,
-				line: 12,
-				char: 1
-			},
-			{
-				name: "getAllFeatureVariables",
-				testname: "getAllFeatureVariables-doubleQuote",
-				expected: true,
-				line: 13,
-				char: 1
 			}
 		];
 
