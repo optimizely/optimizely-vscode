@@ -1,0 +1,43 @@
+const optimizely = require('@optimizely/optimizely-sdk');
+
+optimizely.setLogLevel('debug');
+optimizely.setLogger(optimizely.logging.createLogger());
+const optimizelyClientInstance = optimizely.createInstance({
+  jsonSchemaValidator: jsonSchemaValidator,
+  sdkKey: 'XXXXXXXXXXXXXX',
+});
+
+var attributes = { attribute1: 'x' };
+
+var userID = 'user1';
+
+
+optimizelyClientInstance.onReady().then(() => {
+  console.log('*********client instance is ready*********');
+  
+  //*******testing comments******
+  // const v2ariableString2 = optimizelyClientInstance.getFeatureVariableDouble"invalidFlag3", userID, attributes);
+  /* const v3ariableString2 = optimizelyClientInstance.getFeatureVariableString("invalidFlag4", userID, attributes);
+  * const v3ariableString2 = optimizelyClientInstance.getFeatureVariableBoolean("invalidFlag5", userID, attributes);
+  */
+ 
+  const featureVariableValues = optimizelyClientInstance.getAllFeatureVariables(
+    'invalidFlag1',
+    userID,
+    attributes
+  );
+  const variableJSON1 = optimizelyClientInstance.getFeatureVariableJSON("flag1", userID, attributes);
+  const variableJSON2 = optimizelyClientInstance.getFeatureVariableJSON("invalidFlag2", userID, attributes);
+  const variableBoolean1 = optimizelyClientInstance.getFeatureVariableBoolean('flag1', 'boolean1', userID, attributes); //const variableBoolean = optimizelyClientInstance.variableBoolean("invalidFlag3", ...
+  const variableBoolean2 = optimizelyClientInstance.getFeatureVariableBoolean('invalidFlag3', 'boolean1', userID, attributes);
+  const variableString1 = optimizelyClientInstance.getFeatureVariableString("flag2", 'string1', userID, attributes);
+  const variableString2 = optimizelyClientInstance.getFeatureVariableString("invalidFlag4", 'string1', userID, attributes);
+  const variableDouble1 = optimizelyClientInstance.getFeatureVariableDouble("flag3", userID, attributes);
+  const variableDouble2 = optimizelyClientInstance.getFeatureVariableDouble("invalidFlag5", userID, attributes);
+  const variableInteger1 = optimizelyClientInstance.getFeatureVariableInteger("flag3", userID, attributes);
+  const variableInteger3 = optimizelyClientInstance.getFeatureVariableInteger("invalidFlag5", userID, attributes);
+  const allVariables1 = optimizelyClientInstance.getAllFeatureVariables('flag3', userID, attributes);
+  const allVariables2 = optimizelyClientInstance.getAllFeatureVariables('invalidFlag5', userID, attributes);
+  const isFeatureEnabled1 = optimizelyClientInstance.isFeatureEnabled('flag1', userID, attributes);
+  const isFeatureEnabled2 = optimizelyClientInstance.isFeatureEnabled('invalidFlag4', userID, attributes);
+});

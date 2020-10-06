@@ -2,6 +2,7 @@
 
 ## Unreleased
  - Add new method `getFeatureVariableJSON` to support JSON feature variables.
+ - Add feature key tracking to underline a feature key that is not in datafile.
 
 ## 0.0.6
 May 25, 2020
