@@ -3,7 +3,8 @@
 ## Unreleased
  - Add new method `getFeatureVariableJSON` to support JSON feature variables. ([#8](https://github.com/optimizely/optimizely-vscode/pull/8))
  - Add feature key tracking to underline a feature key that is not in datafile.([#11](https://github.com/optimizely/optimizely-vscode/pull/11))
- - Add `getAllFeatureVariables` to auto-complete.([#12](https://github.com/optimizely/optimizely-vscode/pull/12))
+ - Add `getAllFeatureVariables` to auto-complete and hide `variables` view in debug dialog for `isFeatureEnabled` and `getAllFeatureVariables` methods.([#12](https://github.com/optimizely/optimizely-vscode/pull/12))
+ - Add `track` to auto-complete.([#14](https://github.com/optimizely/optimizely-vscode/pull/14))
 
 ## 0.0.6
 May 25, 2020
