@@ -269,6 +269,16 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 				});
 	
 		}
+
+		if (isEventApi(linePrefix)) {
+			const exp:string[] = this.optimizelyService.getEvents();
+
+			return exp.map(flag => {
+					return new vscode.CompletionItem(flag, vscode.CompletionItemKind.Field);
+				});
+
+		}
+
 		if (isFeatureApi(linePrefix)) {
 			const flags:string[] = this.optimizelyService.allFlags();
 			
@@ -375,6 +385,12 @@ class OptimizelyCompletionItemProvider implements vscode.CompletionItemProvider 
 
 		return undefined;
 	}
+}
+
+const isEventApi = (linePrefix:string): boolean => {
+	return (linePrefix.endsWith('track(\'')
+	|| linePrefix.endsWith('track(\"')
+	)
 }
 
 const isExperimentApi = (linePrefix:string): boolean => {
