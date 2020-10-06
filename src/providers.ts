@@ -401,6 +401,8 @@ const isFeatureApi = (linePrefix:string): boolean => {
 	|| linePrefix.endsWith('getFeatureVariableBoolean(\"')
 	|| linePrefix.endsWith('getFeatureVariableJSON(\'')
 	|| linePrefix.endsWith('getFeatureVariableJSON(\"')
+	|| linePrefix.endsWith('getAllFeatureVariables(\'')
+	|| linePrefix.endsWith('getAllFeatureVariables(\"')
 	|| linePrefix.endsWith('<OptimizelyFeature feature=\"')
 	|| linePrefix.endsWith('<OptimizelyFeature feature=\'')
 	)	

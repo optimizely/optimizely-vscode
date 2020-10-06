@@ -119,8 +119,7 @@ suite('provider utils tests', () => {
 			const pos = new vscode.Position(t.line, t.char);
 			let linePrefix = document.lineAt(pos).text;
 			let regex = providers.getFeatureRegEx(t.name);
-			assert.equal(linePrefix.match(providers.getFeatureRegEx(t.name)) != null, t.expected)
-			assert.equal(t.expected, t.expected);
+			assert.equal(linePrefix.match(regex) != null, t.expected)
 		});
 	});
 });

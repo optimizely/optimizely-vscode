@@ -109,8 +109,14 @@ function setVariables(k) {
 
 function changeKey() {
     var val = document.getElementById('keys').value
-    if (optimizelyClientInstance.getOptimizelyConfig().featuresMap[val] !== undefined) {
-        setVariables(val)
+    var currentMethod = document.getElementById('methods').value
+    if (currentMethod == 'isFeatureEnabled' || currentMethod == 'getAllFeatureVariables') {
+        document.getElementById('variables').hidden = true
+    }
+    else {
+        if (optimizelyClientInstance.getOptimizelyConfig().featuresMap[val] !== undefined) {
+            setVariables(val)
+        }
     }
 }
 
@@ -126,8 +132,13 @@ function changeMethod() {
         var featureMap = optimizelyClientInstance.getOptimizelyConfig().featuresMap
         var featureKeys = Object.keys(featureMap);
         setKeys(featureKeys)
-        if (featureKeys.length > 0) {
-            setVariables(featureKeys[0])
+        if (val == 'getAllFeatureVariables' || val == 'isFeatureEnabled') {
+            document.getElementById('variables').hidden = true
+        }
+        else {
+            if (featureKeys.length > 0) {
+                setVariables(featureKeys[0])
+            }
         }
     }
 }
@@ -208,6 +219,9 @@ function run() {
             if (getFeatureVariableType(key, variable) === "json") {
                 response = JSON.stringify(response);
             }
+            break;
+        case 'getAllFeatureVariables':
+            response = JSON.stringify(optimizelyClientInstance.getAllFeatureVariables(key, userid, attributes), null, 2)
             break;
         case 'getFeatureVariableString':
             response = optimizelyClientInstance.getFeatureVariableString(key, variable, userid, attributes)
@@ -334,6 +348,7 @@ function delRow(el) {
             <option>getFeatureVariableDouble</option>
             <option>getFeatureVariableBoolean</option>
             <option>getFeatureVariableJSON</option>
+            <option>getAllFeatureVariables</option>
         </select>    
         <select id="keys" onchange="changeKey()">
         </select>    
