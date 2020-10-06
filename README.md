@@ -4,7 +4,6 @@ The Optimizely VSCode extension autocompletes the following parameters in Javasc
 - feature keys
 - experiment keys
 - feature variables
-- event keys
 
 In other languages, you can insert the preceding list of elements using the following keyboard shortcuts.
 
