@@ -1,6 +1,9 @@
 # vscode extension for Optimizely
 
 ## Unreleased
+
+## 0.0.8
+October 7, 2020
  - Add new method `getFeatureVariableJSON` to support JSON feature variables. ([#8](https://github.com/optimizely/optimizely-vscode/pull/8))
  - Add feature key tracking to underline a feature key that is not in datafile.([#11](https://github.com/optimizely/optimizely-vscode/pull/11))
  - Add `getAllFeatureVariables` to auto-complete and hide `variables` view in debug dialog for `isFeatureEnabled` and `getAllFeatureVariables` methods.([#12](https://github.com/optimizely/optimizely-vscode/pull/12))
