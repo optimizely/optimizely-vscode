@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.1.0
+October 9, 2020
+ - Upgrade `@optimizely/optimizely-sdk` to [4.3.4](https://github.com/optimizely/javascript-sdk/releases/tag/v4.3.4) in debug dialog.
+
 ## 0.0.8
 October 7, 2020
  - Add new method `getFeatureVariableJSON` to support JSON feature variables. ([#8](https://github.com/optimizely/optimizely-vscode/pull/8))
