@@ -10,7 +10,7 @@ In other languages, you can insert the preceding list of elements using the foll
 
 This extension also evaluates if provided feature keys are valid for Optimizely's public SDK methods (for example, getFeatureVariable(feature_key, userID, attributes), or isFeatureEnabled(feature_key, userID)) for Javascript and TypeScript. If a given feature_key is invalid (i.e., doesn't exist in the datafile for the sdk key used in "Optimizely: config" command), the extension highlights it and displays a warning on hover.
 
-The Optimizely VSCode extension is compatiable with 1.34 and higher of vscode.
+**Compatibilty:** The Optimizely VSCode extension is compatiable with 1.34 and higher of vscode. It currently supports SDKs versions released *before* February 2020.
 
 ## Features
 
